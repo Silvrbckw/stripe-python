@@ -18,7 +18,7 @@ from stripe.request_metrics import RequestMetrics
 # - Use Pycurl if it's there (at least it verifies SSL certs)
 # - Fall back to urllib2 with a warning if needed
 try:
-    from stripe.six.moves import urllib
+    import urllib
 except ImportError:
     # Try to load in urllib2, but don't sweat it if it's not available.
     pass
