@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from stripe import api_requestor, error, util, six
 from stripe.stripe_object import StripeObject
-from stripe.six.moves.urllib.parse import quote_plus
+from urllib.parse import quote_plus
 
 
 class APIResource(StripeObject):

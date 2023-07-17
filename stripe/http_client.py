@@ -60,7 +60,7 @@ except ImportError:
     urlfetch = None
 
 # proxy support for the pycurl client
-from stripe.six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 
 def _now_ms():

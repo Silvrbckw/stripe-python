@@ -8,6 +8,7 @@ from distutils.version import StrictVersion
 import pytest
 
 import stripe
+from stripe import StripeClient
 from stripe.six.moves.urllib.request import urlopen
 from stripe.six.moves.urllib.error import HTTPError
 

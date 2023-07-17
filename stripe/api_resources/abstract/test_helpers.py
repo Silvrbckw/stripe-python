@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 from stripe import error, util, six
-from stripe.six.moves.urllib.parse import quote_plus
+from urllib.parse import quote_plus
 from stripe.api_resources.abstract import APIResource
 
 

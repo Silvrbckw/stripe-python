@@ -12,7 +12,7 @@ from collections import OrderedDict
 import stripe
 from stripe import error, oauth_error, http_client, version, util, six
 from stripe.multipart_data_generator import MultipartDataGenerator
-from stripe.six.moves.urllib.parse import urlencode, urlsplit, urlunsplit
+from urllib.parse import urlencode, urlsplit, urlunsplit
 from stripe.stripe_response import StripeResponse, StripeStreamResponse
 
 

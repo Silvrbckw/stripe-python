@@ -12,7 +12,7 @@ import stripe
 from stripe import six, util
 from stripe.stripe_response import StripeResponse, StripeStreamResponse
 
-from stripe.six.moves.urllib.parse import urlsplit
+from urllib.parse import urlsplit
 
 import urllib3
 

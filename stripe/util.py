@@ -10,7 +10,7 @@ import re
 
 import stripe
 from stripe import six
-from stripe.six.moves.urllib.parse import parse_qsl, quote_plus
+from urllib.parse import parse_qsl, quote_plus
 
 STRIPE_LOG = os.environ.get("STRIPE_LOG")
 
