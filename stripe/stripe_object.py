@@ -5,8 +5,7 @@ import json
 from copy import deepcopy
 
 import stripe
-from stripe import api_requestor, util, six
-
+from stripe import api_requestor, util
 
 def _compute_diff(current, previous):
     if isinstance(current, dict):

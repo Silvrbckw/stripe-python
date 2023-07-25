@@ -10,7 +10,7 @@ import warnings
 from collections import OrderedDict
 
 import stripe
-from stripe import error, oauth_error, http_client, version, util, six
+from stripe import error, oauth_error, http_client, version, util
 from stripe.multipart_data_generator import MultipartDataGenerator
 from urllib.parse import urlencode, urlsplit, urlunsplit
 from stripe.stripe_response import StripeResponse, StripeStreamResponse

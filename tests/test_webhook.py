@@ -5,7 +5,7 @@ import time
 import pytest
 
 import stripe
-from stripe import six
+
 
 
 DUMMY_WEBHOOK_PAYLOAD = """{

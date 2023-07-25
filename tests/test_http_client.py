@@ -5,7 +5,7 @@ import json
 
 import stripe
 import urllib3
-from stripe import six, util
+from stripe import util
 
 VALID_API_METHODS = ("get", "post", "delete")
 

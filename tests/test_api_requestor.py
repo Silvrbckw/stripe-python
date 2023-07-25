@@ -9,7 +9,7 @@ from collections import OrderedDict
 import pytest
 
 import stripe
-from stripe import six, util
+from stripe import util
 from stripe.stripe_response import StripeResponse, StripeStreamResponse
 
 from urllib.parse import urlsplit

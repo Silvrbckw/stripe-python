@@ -10,7 +10,7 @@ import threading
 import json
 
 import stripe
-from stripe import error, util, six
+from stripe import error, util
 from stripe.request_metrics import RequestMetrics
 
 # - Requests is the preferred HTTP library

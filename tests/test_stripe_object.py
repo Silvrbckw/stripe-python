@@ -8,7 +8,7 @@ from copy import copy, deepcopy
 import pytest
 
 import stripe
-from stripe import six
+
 
 
 SAMPLE_INVOICE = json.loads(

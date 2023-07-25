@@ -9,7 +9,7 @@ import os
 import re
 
 import stripe
-from stripe import six
+
 from urllib.parse import parse_qsl, quote_plus
 
 STRIPE_LOG = os.environ.get("STRIPE_LOG")
