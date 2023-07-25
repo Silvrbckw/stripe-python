@@ -511,16 +511,6 @@ def remove_move(name):
         except KeyError:
             raise AttributeError("no such move, %r" % (name,))
 
-
-_meth_func = "__func__"
-_meth_self = "__self__"
-
-_func_closure = "__closure__"
-_func_code = "__code__"
-_func_defaults = "__defaults__"
-_func_globals = "__globals__"
-
-
 try:
     advance_iterator = next
 except NameError:
@@ -536,53 +526,16 @@ except NameError:
         return any("__call__" in klass.__dict__ for klass in type(obj).__mro__)
 
 
-def get_unbound_function(unbound):
-    return unbound
-
 create_bound_method = types.MethodType
-
-def create_unbound_method(func, cls):
-    return func
-
-Iterator = object
-
-_add_doc(get_unbound_function,
-         """Get the function out of a possibly unbound function""")
-
-
-get_method_function = operator.attrgetter(_meth_func)
-get_method_self = operator.attrgetter(_meth_self)
-get_function_closure = operator.attrgetter(_func_closure)
-get_function_code = operator.attrgetter(_func_code)
-get_function_defaults = operator.attrgetter(_func_defaults)
-get_function_globals = operator.attrgetter(_func_globals)
-
-
-def iterkeys(d, **kw):
-    return iter(d.keys(**kw))
-
-def itervalues(d, **kw):
-    return iter(d.values(**kw))
 
 def iteritems(d, **kw):
     return iter(d.items(**kw))
-
-def iterlists(d, **kw):
-    return iter(d.lists(**kw))
 
 viewkeys = operator.methodcaller("keys")
 
 viewvalues = operator.methodcaller("values")
 
 viewitems = operator.methodcaller("items")
-
-_add_doc(iterkeys, "Return an iterator over the keys of a dictionary.")
-_add_doc(itervalues, "Return an iterator over the values of a dictionary.")
-_add_doc(iteritems,
-         "Return an iterator over the (key, value) pairs of a dictionary.")
-_add_doc(iterlists,
-         "Return an iterator over the (key, [values]) pairs of a dictionary.")
-
 
 if True:
     def b(s):
