@@ -25,6 +25,7 @@ __all__ = [
     "logfmt",
 ]
 
+
 def is_appengine_dev():
     return "APPENGINE_RUNTIME" in os.environ and "Dev" in os.environ.get(
         "SERVER_SOFTWARE", ""
