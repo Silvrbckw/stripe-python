@@ -19,17 +19,11 @@ logger = logging.getLogger("stripe")
 __all__ = [
     "io",
     "parse_qsl",
-    "utf8",
     "log_info",
     "log_debug",
     "dashboard_link",
     "logfmt",
 ]
-
-
-def utf8(value):
-    return value
-
 
 def is_appengine_dev():
     return "APPENGINE_RUNTIME" in os.environ and "Dev" in os.environ.get(
@@ -100,7 +94,7 @@ def logfmt(props):
 if hasattr(hmac, "compare_digest"):
     # Prefer the stdlib implementation, when available.
     def secure_compare(val1, val2):
-        return hmac.compare_digest(utf8(val1), utf8(val2))
+        return hmac.compare_digest(val1, val2)
 
 else:
 
@@ -112,7 +106,6 @@ else:
         only when the two strings have the same length. It short-circuits when
         they have different lengths.
         """
-        val1, val2 = utf8(val1), utf8(val2)
         if len(val1) != len(val2):
             return False
         result = 0
@@ -233,8 +226,7 @@ def merge_dicts(x, y):
 
 
 def sanitize_id(id):
-    utf8id = utf8(id)
-    quotedId = quote_plus(utf8id)
+    quotedId = quote_plus(id)
     return quotedId
 
 

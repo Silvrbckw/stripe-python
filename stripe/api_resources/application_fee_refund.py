@@ -21,8 +21,8 @@ class ApplicationFeeRefund(UpdateableAPIResource):
 
     @classmethod
     def _build_instance_url(cls, fee, sid):
-        fee = util.utf8(fee)
-        sid = util.utf8(sid)
+        fee = fee
+        sid = sid
         base = ApplicationFee.class_url()
         cust_extn = quote_plus(fee)
         extn = quote_plus(sid)
