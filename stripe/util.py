@@ -72,7 +72,7 @@ def dashboard_link(request_id):
 def logfmt(props):
     def fmt(key, val):
         # Handle case where val is a bytes or bytesarray
-        if six.PY3 and hasattr(val, "decode"):
+        if hasattr(val, "decode"):
             val = val.decode("utf-8")
         # Check if val is already a string to avoid re-encoding into
         # ascii. Since the code is sent through 2to3, we can't just
@@ -109,7 +109,7 @@ else:
         if len(val1) != len(val2):
             return False
         result = 0
-        if six.PY3 and isinstance(val1, bytes) and isinstance(val2, bytes):
+        if isinstance(val1, bytes) and isinstance(val2, bytes):
             for x, y in zip(val1, val2):
                 result |= x ^ y
         else:

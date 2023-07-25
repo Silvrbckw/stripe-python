@@ -107,12 +107,9 @@ class MovedModule(_LazyDescr):
 
     def __init__(self, name, old, new=None):
         super(MovedModule, self).__init__(name)
-        if PY3:
-            if new is None:
-                new = name
-            self.mod = new
-        else:
-            self.mod = old
+        if new is None:
+            new = name
+        self.mod = new
 
     def _resolve(self):
         return _import_module(self.mod)
@@ -143,21 +140,15 @@ class MovedAttribute(_LazyDescr):
 
     def __init__(self, name, old_mod, new_mod, old_attr=None, new_attr=None):
         super(MovedAttribute, self).__init__(name)
-        if PY3:
-            if new_mod is None:
-                new_mod = name
-            self.mod = new_mod
-            if new_attr is None:
-                if old_attr is None:
-                    new_attr = name
-                else:
-                    new_attr = old_attr
-            self.attr = new_attr
-        else:
-            self.mod = old_mod
+        if new_mod is None:
+            new_mod = name
+        self.mod = new_mod
+        if new_attr is None:
             if old_attr is None:
-                old_attr = name
-            self.attr = old_attr
+                new_attr = name
+            else:
+                new_attr = old_attr
+        self.attr = new_attr
 
     def _resolve(self):
         module = _import_module(self.mod)
@@ -521,22 +512,13 @@ def remove_move(name):
             raise AttributeError("no such move, %r" % (name,))
 
 
-if PY3:
-    _meth_func = "__func__"
-    _meth_self = "__self__"
+_meth_func = "__func__"
+_meth_self = "__self__"
 
-    _func_closure = "__closure__"
-    _func_code = "__code__"
-    _func_defaults = "__defaults__"
-    _func_globals = "__globals__"
-else:
-    _meth_func = "im_func"
-    _meth_self = "im_self"
-
-    _func_closure = "func_closure"
-    _func_code = "func_code"
-    _func_defaults = "func_defaults"
-    _func_globals = "func_globals"
+_func_closure = "__closure__"
+_func_code = "__code__"
+_func_defaults = "__defaults__"
+_func_globals = "__globals__"
 
 
 try:
@@ -554,32 +536,16 @@ except NameError:
         return any("__call__" in klass.__dict__ for klass in type(obj).__mro__)
 
 
-if PY3:
-    def get_unbound_function(unbound):
-        return unbound
+def get_unbound_function(unbound):
+    return unbound
 
-    create_bound_method = types.MethodType
+create_bound_method = types.MethodType
 
-    def create_unbound_method(func, cls):
-        return func
+def create_unbound_method(func, cls):
+    return func
 
-    Iterator = object
-else:
-    def get_unbound_function(unbound):
-        return unbound.im_func
+Iterator = object
 
-    def create_bound_method(func, obj):
-        return types.MethodType(func, obj, obj.__class__)
-
-    def create_unbound_method(func, cls):
-        return types.MethodType(func, None, cls)
-
-    class Iterator(object):
-
-        def next(self):
-            return type(self).__next__(self)
-
-    callable = callable
 _add_doc(get_unbound_function,
          """Get the function out of a possibly unbound function""")
 
@@ -592,42 +558,23 @@ get_function_defaults = operator.attrgetter(_func_defaults)
 get_function_globals = operator.attrgetter(_func_globals)
 
 
-if PY3:
-    def iterkeys(d, **kw):
-        return iter(d.keys(**kw))
+def iterkeys(d, **kw):
+    return iter(d.keys(**kw))
 
-    def itervalues(d, **kw):
-        return iter(d.values(**kw))
+def itervalues(d, **kw):
+    return iter(d.values(**kw))
 
-    def iteritems(d, **kw):
-        return iter(d.items(**kw))
+def iteritems(d, **kw):
+    return iter(d.items(**kw))
 
-    def iterlists(d, **kw):
-        return iter(d.lists(**kw))
+def iterlists(d, **kw):
+    return iter(d.lists(**kw))
 
-    viewkeys = operator.methodcaller("keys")
+viewkeys = operator.methodcaller("keys")
 
-    viewvalues = operator.methodcaller("values")
+viewvalues = operator.methodcaller("values")
 
-    viewitems = operator.methodcaller("items")
-else:
-    def iterkeys(d, **kw):
-        return d.iterkeys(**kw)
-
-    def itervalues(d, **kw):
-        return d.itervalues(**kw)
-
-    def iteritems(d, **kw):
-        return d.iteritems(**kw)
-
-    def iterlists(d, **kw):
-        return d.iterlists(**kw)
-
-    viewkeys = operator.methodcaller("viewkeys")
-
-    viewvalues = operator.methodcaller("viewvalues")
-
-    viewitems = operator.methodcaller("viewitems")
+viewitems = operator.methodcaller("items")
 
 _add_doc(iterkeys, "Return an iterator over the keys of a dictionary.")
 _add_doc(itervalues, "Return an iterator over the values of a dictionary.")
@@ -637,7 +584,7 @@ _add_doc(iterlists,
          "Return an iterator over the (key, [values]) pairs of a dictionary.")
 
 
-if PY3:
+if True:
     def b(s):
         return s.encode("latin-1")
 
@@ -663,28 +610,7 @@ if PY3:
         _assertRaisesRegex = "assertRaisesRegex"
         _assertRegex = "assertRegex"
         _assertNotRegex = "assertNotRegex"
-else:
-    def b(s):
-        return s
-    # Workaround for standalone backslash
 
-    def u(s):
-        return unicode(s.replace(r'\\', r'\\\\'), "unicode_escape")
-    unichr = unichr
-    int2byte = chr
-
-    def byte2int(bs):
-        return ord(bs[0])
-
-    def indexbytes(buf, i):
-        return ord(buf[i])
-    iterbytes = functools.partial(itertools.imap, ord)
-    import StringIO
-    StringIO = BytesIO = StringIO.StringIO
-    _assertCountEqual = "assertItemsEqual"
-    _assertRaisesRegex = "assertRaisesRegexp"
-    _assertRegex = "assertRegexpMatches"
-    _assertNotRegex = "assertNotRegexpMatches"
 _add_doc(b, """Byte literal""")
 _add_doc(u, """Text literal""")
 
@@ -705,39 +631,19 @@ def assertNotRegex(self, *args, **kwargs):
     return getattr(self, _assertNotRegex)(*args, **kwargs)
 
 
-if PY3:
-    exec_ = getattr(moves.builtins, "exec")
+exec_ = getattr(moves.builtins, "exec")
 
-    def reraise(tp, value, tb=None):
-        try:
-            if value is None:
-                value = tp()
-            if value.__traceback__ is not tb:
-                raise value.with_traceback(tb)
-            raise value
-        finally:
-            value = None
-            tb = None
-
-else:
-    def exec_(_code_, _globs_=None, _locs_=None):
-        """Execute code in a namespace."""
-        if _globs_ is None:
-            frame = sys._getframe(1)
-            _globs_ = frame.f_globals
-            if _locs_ is None:
-                _locs_ = frame.f_locals
-            del frame
-        elif _locs_ is None:
-            _locs_ = _globs_
-        exec("""exec _code_ in _globs_, _locs_""")
-
-    exec_("""def reraise(tp, value, tb=None):
+def reraise(tp, value, tb=None):
     try:
-        raise tp, value, tb
+        if value is None:
+            value = tp()
+        if value.__traceback__ is not tb:
+            raise value.with_traceback(tb)
+        raise value
     finally:
+        value = None
         tb = None
-""")
+
 
 
 if sys.version_info[:2] > (3,):
@@ -925,7 +831,7 @@ def ensure_str(s, encoding='utf-8', errors='strict'):
     # Optimization: Fast return for the common case.
     if type(s) is str:
         return s
-    if PY3 and isinstance(s, binary_type):
+    if isinstance(s, binary_type):
         return s.decode(encoding, errors)
     elif not isinstance(s, (text_type, binary_type)):
         raise TypeError("not expecting type '%s'" % type(s))

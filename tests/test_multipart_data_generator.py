@@ -26,8 +26,7 @@ class TestMultipartDataGenerator(object):
         generator.add_params(params)
         http_body = generator.get_post_data()
 
-        if six.PY3:
-            http_body = http_body.decode("utf-8")
+        http_body = http_body.decode("utf-8")
 
         assert re.search(
             r"Content-Disposition: form-data; name=\"key1\"", http_body
@@ -70,7 +69,7 @@ class TestMultipartDataGenerator(object):
         test_file.seek(0)
         file_contents = test_file.read()
 
-        if six.PY3 and isinstance(file_contents, bytes):
+        if isinstance(file_contents, bytes):
             file_contents = file_contents.decode("utf-8")
 
         assert http_body.find(file_contents) != -1

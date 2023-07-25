@@ -663,7 +663,7 @@ class Urllib2Client(HTTPClient):
         )
 
     def _request_internal(self, method, url, headers, post_data, is_streaming):
-        if six.PY3 and isinstance(post_data, six.string_types):
+        if isinstance(post_data, six.string_types):
             post_data = post_data.encode("utf-8")
 
         req = urllib.request.Request(url, post_data, headers)
