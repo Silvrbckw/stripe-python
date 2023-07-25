@@ -313,10 +313,7 @@ class StripeObject(dict):
             str(self),
         )
 
-        if six.PY2:
-            return unicode_repr.encode("utf-8")
-        else:
-            return unicode_repr
+        return unicode_repr
 
     def __str__(self):
         return json.dumps(

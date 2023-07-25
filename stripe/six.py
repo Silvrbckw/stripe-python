@@ -32,8 +32,6 @@ __author__ = "Benjamin Peterson <benjamin@python.org>"
 __version__ = "1.16.0"
 
 
-# Useful for very coarse version differentiation.
-PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
 PY34 = sys.version_info[0:2] >= (3, 4)
 
@@ -927,9 +925,7 @@ def ensure_str(s, encoding='utf-8', errors='strict'):
     # Optimization: Fast return for the common case.
     if type(s) is str:
         return s
-    if PY2 and isinstance(s, text_type):
-        return s.encode(encoding, errors)
-    elif PY3 and isinstance(s, binary_type):
+    if PY3 and isinstance(s, binary_type):
         return s.decode(encoding, errors)
     elif not isinstance(s, (text_type, binary_type)):
         raise TypeError("not expecting type '%s'" % type(s))
@@ -963,13 +959,6 @@ def python_2_unicode_compatible(klass):
     To support Python 2 and 3 with a single code base, define a __str__ method
     returning text and apply this decorator to the class.
     """
-    if PY2:
-        if '__str__' not in klass.__dict__:
-            raise ValueError("@python_2_unicode_compatible cannot be applied "
-                             "to %s because it doesn't define __str__()." %
-                             klass.__name__)
-        klass.__unicode__ = klass.__str__
-        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
     return klass
 
 

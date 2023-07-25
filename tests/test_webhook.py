@@ -63,11 +63,6 @@ class TestWebhook(object):
         assert isinstance(event, stripe.Event)
 
     def test_construct_event_from_bytes(self):
-        # This test is only applicable to Python 3 as `bytes` is not a symbol
-        # in Python 2.
-        if six.PY2:
-            return
-
         header = generate_header()
         payload = bytes(DUMMY_WEBHOOK_PAYLOAD, "utf-8")
         event = stripe.Webhook.construct_event(
