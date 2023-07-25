@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function
 
 import re
 
-from stripe import six
+import io
 from stripe.multipart_data_generator import MultipartDataGenerator
 
 
@@ -83,10 +83,10 @@ class TestMultipartDataGenerator(object):
             self.run_test_multipart_data_with_file(test_file)
 
     def test_multipart_data_stringio(self):
-        string = six.StringIO("foo")
+        string = io.StringIO("foo")
         self.run_test_multipart_data_with_file(string)
 
     def test_multipart_data_unicode_file_name(self):
-        string = six.StringIO("foo")
+        string = io.StringIO("foo")
         string.name = u"паспорт.png"
         self.run_test_multipart_data_with_file(string)
