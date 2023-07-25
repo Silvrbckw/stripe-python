@@ -301,10 +301,10 @@ class StripeObject(dict):
     def __repr__(self):
         ident_parts = [type(self).__name__]
 
-        if isinstance(self.get("object"), six.string_types):
+        if isinstance(self.get("object"), str):
             ident_parts.append(self.get("object"))
 
-        if isinstance(self.get("id"), six.string_types):
+        if isinstance(self.get("id"), str):
             ident_parts.append("id=%s" % (self.get("id"),))
 
         unicode_repr = "<%s at %s> JSON: %s" % (

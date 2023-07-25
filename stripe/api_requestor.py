@@ -145,7 +145,7 @@ class APIRequestor(object):
         # OAuth errors are a JSON object where `error` is a string. In
         # contrast, in API errors, `error` is a hash with sub-keys. We use
         # this property to distinguish between OAuth and API errors.
-        if isinstance(error_data, six.string_types):
+        if isinstance(error_data, str):
             err = self.specific_oauth_error(
                 rbody, rcode, resp, rheaders, error_data
             )

@@ -187,7 +187,7 @@ class StubRequestHandler(object):
             if expect_stream != is_streaming:
                 return None
 
-            if not isinstance(rbody, six.string_types):
+            if not isinstance(rbody, str):
                 rbody = json.dumps(rbody)
             if is_streaming:
                 stripe_response = StripeStreamResponse(

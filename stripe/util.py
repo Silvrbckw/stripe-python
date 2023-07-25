@@ -79,8 +79,8 @@ def logfmt(props):
         # ascii. Since the code is sent through 2to3, we can't just
         # use unicode(val, encoding='utf8') since it will be
         # translated incorrectly.
-        if not isinstance(val, six.string_types):
-            val = six.text_type(val)
+        if not isinstance(val, str):
+            val = str(val)
         if re.search(r"\s", val):
             val = repr(val)
         # key should already be a string
@@ -150,7 +150,7 @@ def convert_to_stripe_object(
     ):
         resp = resp.copy()
         klass_name = resp.get("object")
-        if isinstance(klass_name, six.string_types):
+        if isinstance(klass_name, str):
             klass = get_object_classes().get(
                 klass_name, stripe.stripe_object.StripeObject
             )

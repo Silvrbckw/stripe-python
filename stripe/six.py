@@ -36,38 +36,8 @@ PY3 = sys.version_info[0] == 3
 PY34 = sys.version_info[0:2] >= (3, 4)
 
 if PY3:
-    string_types = str,
-    integer_types = int,
-    class_types = type,
-    text_type = str
     binary_type = bytes
 
-    MAXSIZE = sys.maxsize
-else:
-    string_types = basestring,
-    integer_types = (int, long)
-    class_types = (type, types.ClassType)
-    text_type = unicode
-    binary_type = str
-
-    if sys.platform.startswith("java"):
-        # Jython always uses 32 bits.
-        MAXSIZE = int((1 << 31) - 1)
-    else:
-        # It's possible to have sizeof(long) != sizeof(Py_ssize_t).
-        class X(object):
-
-            def __len__(self):
-                return 1 << 31
-        try:
-            len(X())
-        except OverflowError:
-            # 32-bit
-            MAXSIZE = int((1 << 31) - 1)
-        else:
-            # 64-bit
-            MAXSIZE = int((1 << 63) - 1)
-        del X
 
 if PY34:
     from importlib.util import spec_from_loader
@@ -706,7 +676,7 @@ def ensure_binary(s, encoding='utf-8', errors='strict'):
     """
     if isinstance(s, binary_type):
         return s
-    if isinstance(s, text_type):
+    if isinstance(s, str):
         return s.encode(encoding, errors)
     raise TypeError("not expecting type '%s'" % type(s))
 
@@ -727,7 +697,7 @@ def ensure_str(s, encoding='utf-8', errors='strict'):
         return s
     if isinstance(s, binary_type):
         return s.decode(encoding, errors)
-    elif not isinstance(s, (text_type, binary_type)):
+    elif not isinstance(s, (str, binary_type)):
         raise TypeError("not expecting type '%s'" % type(s))
     return s
 
@@ -745,7 +715,7 @@ def ensure_text(s, encoding='utf-8', errors='strict'):
     """
     if isinstance(s, binary_type):
         return s.decode(encoding, errors)
-    elif isinstance(s, text_type):
+    elif isinstance(s, str):
         return s
     else:
         raise TypeError("not expecting type '%s'" % type(s))

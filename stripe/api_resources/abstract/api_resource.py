@@ -30,7 +30,7 @@ class APIResource(StripeObject):
     def instance_url(self):
         id = self.get("id")
 
-        if not isinstance(id, six.string_types):
+        if not isinstance(id, str):
             raise error.InvalidRequestError(
                 "Could not determine which URL to request: %s instance "
                 "has invalid ID: %r, %s. ID should be of type `str` (or"
