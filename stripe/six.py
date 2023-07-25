@@ -950,18 +950,6 @@ def ensure_text(s, encoding='utf-8', errors='strict'):
     else:
         raise TypeError("not expecting type '%s'" % type(s))
 
-
-def python_2_unicode_compatible(klass):
-    """
-    A class decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-    """
-    return klass
-
-
 # Complete the moves implementation.
 # This code is at the end of this module to speed up module loading.
 # Turn this module into a package.
