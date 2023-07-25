@@ -528,9 +528,6 @@ except NameError:
 
 create_bound_method = types.MethodType
 
-def iteritems(d, **kw):
-    return iter(d.items(**kw))
-
 viewkeys = operator.methodcaller("keys")
 
 viewvalues = operator.methodcaller("values")

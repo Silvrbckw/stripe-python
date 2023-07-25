@@ -27,13 +27,13 @@ def _encode_datetime(dttime):
 
 def _encode_nested_dict(key, data, fmt="%s[%s]"):
     d = OrderedDict()
-    for subkey, subvalue in six.iteritems(data):
+    for subkey, subvalue in iter(data.items()):
         d[fmt % (key, subkey)] = subvalue
     return d
 
 
 def _api_encode(data):
-    for key, value in six.iteritems(data):
+    for key, value in iter(data.items()):
         if value is None:
             continue
         elif hasattr(value, "stripe_id"):
@@ -343,7 +343,7 @@ class APIRequestor(object):
 
         headers = self.request_headers(my_api_key, method)
         if supplied_headers is not None:
-            for key, value in six.iteritems(supplied_headers):
+            for key, value in iter(supplied_headers.items()):
                 headers[key] = value
 
         util.log_info("Request to Stripe api", method=method, path=abs_url)

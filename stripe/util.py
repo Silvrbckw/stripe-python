@@ -194,7 +194,7 @@ def convert_to_dict(obj):
     # comprehension returns a regular dict and recursively applies the
     # conversion to each value.
     elif isinstance(obj, dict):
-        return {k: convert_to_dict(v) for k, v in six.iteritems(obj)}
+        return {k: convert_to_dict(v) for k, v in iter(obj.items())}
     else:
         return obj
 

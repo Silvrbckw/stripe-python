@@ -510,7 +510,7 @@ class PycurlClient(HTTPClient):
         if self._proxy:
             # now that we have the parser, get the proxy url pieces
             proxy = self._proxy
-            for scheme, value in six.iteritems(proxy):
+            for scheme, value in iter(proxy.items()):
                 proxy[scheme] = urlparse(value)
 
     def parse_headers(self, data):
@@ -518,7 +518,7 @@ class PycurlClient(HTTPClient):
             return {}
         raw_headers = data.split("\r\n", 1)[1]
         headers = email.message_from_string(raw_headers)
-        return dict((k.lower(), v) for k, v in six.iteritems(dict(headers)))
+        return dict((k.lower(), v) for k, v in iter(dict(headers).items()))
 
     def request(self, method, url, headers, post_data=None):
         return self._request_internal(
@@ -572,7 +572,7 @@ class PycurlClient(HTTPClient):
         self._curl.setopt(pycurl.TIMEOUT, 80)
         self._curl.setopt(
             pycurl.HTTPHEADER,
-            ["%s: %s" % (k, v) for k, v in six.iteritems(dict(headers))],
+            ["%s: %s" % (k, v) for k, v in iter(dict(headers).items())],
         )
         if self._verify_ssl_certs:
             self._curl.setopt(pycurl.CAINFO, stripe.ca_bundle_path)
@@ -693,7 +693,7 @@ class Urllib2Client(HTTPClient):
             headers = dict(e.info())
         except (urllib.error.URLError, ValueError) as e:
             self._handle_request_error(e)
-        lh = dict((k.lower(), v) for k, v in six.iteritems(dict(headers)))
+        lh = dict((k.lower(), v) for k, v in iter(dict(headers).items()))
         return rcontent, rcode, lh
 
     def _handle_request_error(self, e):

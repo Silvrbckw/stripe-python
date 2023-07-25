@@ -218,7 +218,7 @@ class StripeObject(dict):
 
         self._transient_values = self._transient_values - set(values)
 
-        for k, v in six.iteritems(values):
+        for k, v in iter(values.items()):
             super(StripeObject, self).__setitem__(
                 k,
                 util.convert_to_stripe_object(
@@ -339,7 +339,7 @@ class StripeObject(dict):
             key: list(map(maybe_to_dict_recursive, value))
             if isinstance(value, list)
             else maybe_to_dict_recursive(value)
-            for key, value in six.iteritems(dict(self))
+            for key, value in iter(dict(self).items())
         }
 
     @property
@@ -351,7 +351,7 @@ class StripeObject(dict):
         unsaved_keys = self._unsaved_values or set()
         previous = previous or self._previous or {}
 
-        for k, v in six.iteritems(self):
+        for k, v in iter(self.items()):
             if k == "id" or (isinstance(k, str) and k.startswith("_")):
                 continue
             elif isinstance(v, stripe.api_resources.abstract.APIResource):
@@ -382,7 +382,7 @@ class StripeObject(dict):
 
         copied._retrieve_params = self._retrieve_params
 
-        for k, v in six.iteritems(self):
+        for k, v in iter(self.items()):
             # Call parent's __setitem__ to avoid checks that we've added in the
             # overridden version that can throw exceptions.
             super(StripeObject, copied).__setitem__(k, v)
@@ -398,7 +398,7 @@ class StripeObject(dict):
         copied = self.__copy__()
         memo[id(self)] = copied
 
-        for k, v in six.iteritems(self):
+        for k, v in iter(self.items()):
             # Call parent's __setitem__ to avoid checks that we've added in the
             # overridden version that can throw exceptions.
             super(StripeObject, copied).__setitem__(k, deepcopy(v, memo))

@@ -17,7 +17,7 @@ class MultipartDataGenerator(object):
         # Flatten parameters first
         params = dict(stripe.api_requestor._api_encode(params))
 
-        for key, value in stripe.six.iteritems(params):
+        for key, value in iter(params.items()):
             if value is None:
                 continue
 

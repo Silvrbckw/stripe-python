@@ -118,7 +118,7 @@ class APIHeaderMatcher(object):
         return True
 
     def _extra_match(self, other):
-        for k, v in six.iteritems(self.extra):
+        for k, v in iter(self.extra.items()):
             if other[k] != v:
                 return False
 
@@ -324,7 +324,7 @@ class TestAPIRequestor(object):
         requestor.request("get", "", self.ENCODE_INPUTS)
 
         expectation = []
-        for type_, values in six.iteritems(self.ENCODE_EXPECTATIONS):
+        for type_, values in iter(self.ENCODE_EXPECTATIONS.items()):
             expectation.extend([(k % (type_,), str(v)) for k, v in values])
 
         check_call("get", QueryMatcher(expectation))
