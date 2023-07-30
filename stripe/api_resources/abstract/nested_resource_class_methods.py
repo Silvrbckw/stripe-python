@@ -9,7 +9,7 @@ def nested_resource_class_methods(
     resource, path=None, operations=None, resource_plural=None
 ):
     if resource_plural is None:
-        resource_plural = "%ss" % resource
+        resource_plural = f"{resource}s"
     if path is None:
         path = resource_plural
     if operations is None:
@@ -17,16 +17,12 @@ def nested_resource_class_methods(
 
     def wrapper(cls):
         def nested_resource_url(cls, id, nested_id=None):
-            url = "%s/%s/%s" % (
-                cls.class_url(),
-                quote_plus(id),
-                quote_plus(path),
-            )
+            url = f"{cls.class_url()}/{quote_plus(id)}/{quote_plus(path)}"
             if nested_id is not None:
-                url += "/%s" % quote_plus(nested_id)
+                url += f"/{quote_plus(nested_id)}"
             return url
 
-        resource_url_method = "%ss_url" % resource
+        resource_url_method = f"{resource}s_url"
         setattr(cls, resource_url_method, classmethod(nested_resource_url))
 
         def nested_resource_request(
@@ -49,7 +45,7 @@ def nested_resource_class_methods(
                 params=params,
             )
 
-        resource_request_method = "%ss_request" % resource
+        resource_request_method = f"{resource}s_request"
         setattr(
             cls, resource_request_method, classmethod(nested_resource_request)
         )
@@ -63,7 +59,7 @@ def nested_resource_class_methods(
                         "post", url, **params
                     )
 
-                create_method = "create_%s" % resource
+                create_method = f"create_{resource}"
                 setattr(
                     cls, create_method, classmethod(create_nested_resource)
                 )
@@ -76,7 +72,7 @@ def nested_resource_class_methods(
                         "get", url, **params
                     )
 
-                retrieve_method = "retrieve_%s" % resource
+                retrieve_method = f"retrieve_{resource}"
                 setattr(
                     cls, retrieve_method, classmethod(retrieve_nested_resource)
                 )
@@ -89,7 +85,7 @@ def nested_resource_class_methods(
                         "post", url, **params
                     )
 
-                modify_method = "modify_%s" % resource
+                modify_method = f"modify_{resource}"
                 setattr(
                     cls, modify_method, classmethod(modify_nested_resource)
                 )
@@ -102,7 +98,7 @@ def nested_resource_class_methods(
                         "delete", url, **params
                     )
 
-                delete_method = "delete_%s" % resource
+                delete_method = f"delete_{resource}"
                 setattr(
                     cls, delete_method, classmethod(delete_nested_resource)
                 )
@@ -115,11 +111,11 @@ def nested_resource_class_methods(
                         "get", url, **params
                     )
 
-                list_method = "list_%s" % resource_plural
+                list_method = f"list_{resource_plural}"
                 setattr(cls, list_method, classmethod(list_nested_resources))
 
             else:
-                raise ValueError("Unknown operation: %s" % operation)
+                raise ValueError(f"Unknown operation: {operation}")
 
         return cls
 

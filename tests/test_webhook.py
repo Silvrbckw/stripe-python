@@ -27,8 +27,7 @@ def generate_header(**kwargs):
         signature = stripe.WebhookSignature._compute_signature(
             payload_to_sign, secret
         )
-    header = "t=%d,%s=%s" % (timestamp, scheme, signature)
-    return header
+    return "t=%d,%s=%s" % (timestamp, scheme, signature)
 
 
 class TestWebhook(object):
@@ -127,7 +126,7 @@ class TestWebhookSignature(object):
         )
 
     def test_header_contains_valid_signature(self):
-        header = generate_header() + ",v1=bad_signature"
+        header = f"{generate_header()},v1=bad_signature"
         assert stripe.WebhookSignature.verify_header(
             DUMMY_WEBHOOK_PAYLOAD, header, DUMMY_WEBHOOK_SECRET, tolerance=10
         )

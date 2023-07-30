@@ -19,7 +19,7 @@ class CashBalance(APIResource):
         customer = util.utf8(self.customer)
         base = Customer.class_url()
         cust_extn = quote_plus(customer)
-        return "%s/%s/cash_balance" % (base, cust_extn)
+        return f"{base}/{cust_extn}/cash_balance"
 
     @classmethod
     def retrieve(cls, id, api_key=None, **params):

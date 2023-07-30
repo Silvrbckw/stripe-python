@@ -84,6 +84,6 @@ class TestAPIResource(object):
         # self.assertRaises(AttributeError, getattr, converted.adict, 'object')
 
     def test_raise_on_incorrect_id_type(self):
-        for obj in [None, 1, 3.14, dict(), list(), set(), tuple(), object()]:
+        for obj in [None, 1, 3.14, {}, [], set(), tuple(), object()]:
             with pytest.raises(stripe.error.InvalidRequestError):
                 self.MyResource.retrieve(obj)

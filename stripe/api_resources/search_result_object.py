@@ -40,8 +40,7 @@ class SearchResultObject(StripeObject):
         page = self
 
         while True:
-            for item in page:
-                yield item
+            yield from page
             page = page.next_search_result_page()
 
             if page.is_empty:

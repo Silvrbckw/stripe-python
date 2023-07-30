@@ -32,14 +32,14 @@ class TestLocation(object):
             TEST_RESOURCE_ID, display_name="new-name"
         )
         request_mock.assert_requested(
-            "post", "/v1/terminal/locations/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/terminal/locations/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Location)
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.terminal.Location.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/terminal/locations/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/terminal/locations/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Location)
 
@@ -48,7 +48,7 @@ class TestLocation(object):
         resource.display_name = "new-name"
         location = resource.save()
         request_mock.assert_requested(
-            "post", "/v1/terminal/locations/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/terminal/locations/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Location)
         assert resource is location
@@ -57,13 +57,13 @@ class TestLocation(object):
         resource = stripe.terminal.Location.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/terminal/locations/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/terminal/locations/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.terminal.Location.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/terminal/locations/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/terminal/locations/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True

@@ -47,7 +47,7 @@ class ListObject(StripeObject):
         stripe_account=None,
         **params
     ):
-        url = "%s/%s" % (self.get("url"), quote_plus(util.utf8(id)))
+        url = f'{self.get("url")}/{quote_plus(util.utf8(id))}'
         return self._request(
             "get",
             url,
@@ -85,12 +85,10 @@ class ListObject(StripeObject):
                 "ending_before" in self._retrieve_params
                 and "starting_after" not in self._retrieve_params
             ):
-                for item in reversed(page):
-                    yield item
+                yield from reversed(page)
                 page = page.previous_page()
             else:
-                for item in page:
-                    yield item
+                yield from page
                 page = page.next_page()
 
             if page.is_empty:

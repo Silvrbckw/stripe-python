@@ -21,13 +21,13 @@ class TestCustomMethod(object):
         OBJECT_NAME = "myresource"
 
         def do_stuff(self, idempotency_key=None, **params):
-            url = self.instance_url() + "/do_the_thing"
+            url = f"{self.instance_url()}/do_the_thing"
             headers = util.populate_headers(idempotency_key)
             self.refresh_from(self.request("post", url, params, headers))
             return self
 
         def do_stream_stuff(self, idempotency_key=None, **params):
-            url = self.instance_url() + "/do_the_stream_thing"
+            url = f"{self.instance_url()}/do_the_stream_thing"
             headers = util.populate_headers(idempotency_key)
             return self.request_stream("post", url, params, headers)
 
@@ -116,11 +116,7 @@ class TestCustomMethod(object):
             rheaders={"request-id": "req_123"},
         )
 
-        # Iterate through entire content
-        ids = []
-        for i in resp.auto_paging_iter():
-            ids.append(i.id)
-
+        ids = [i.id for i in resp.auto_paging_iter()]
         # Explicitly assert that the pagination parameter were kept for the
         # second request along with the starting_after param.
         request_mock.assert_requested(

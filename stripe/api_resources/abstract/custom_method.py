@@ -7,19 +7,14 @@ from stripe.six.moves.urllib.parse import quote_plus
 def custom_method(name, http_verb, http_path=None, is_streaming=False):
     if http_verb not in ["get", "post", "delete"]:
         raise ValueError(
-            "Invalid http_verb: %s. Must be one of 'get', 'post' or 'delete'"
-            % http_verb
+            f"Invalid http_verb: {http_verb}. Must be one of 'get', 'post' or 'delete'"
         )
     if http_path is None:
         http_path = name
 
     def wrapper(cls):
         def custom_method_request(cls, sid, **params):
-            url = "%s/%s/%s" % (
-                cls.class_url(),
-                quote_plus(util.utf8(sid)),
-                http_path,
-            )
+            url = f"{cls.class_url()}/{quote_plus(util.utf8(sid))}/{http_path}"
             obj = cls._static_request(http_verb, url, params=params)
 
             # For list objects, we have to attach the parameters so that they
@@ -30,11 +25,7 @@ def custom_method(name, http_verb, http_path=None, is_streaming=False):
             return obj
 
         def custom_method_request_stream(cls, sid, **params):
-            url = "%s/%s/%s" % (
-                cls.class_url(),
-                quote_plus(util.utf8(sid)),
-                http_path,
-            )
+            url = f"{cls.class_url()}/{quote_plus(util.utf8(sid))}/{http_path}"
             return cls._static_request_stream(http_verb, url, params=params)
 
         if is_streaming:
@@ -52,10 +43,8 @@ def custom_method(name, http_verb, http_path=None, is_streaming=False):
             # instance method is decorated with `util.class_method_variant` so
             # that the new class method is called when the original method is
             # called as a class method.
-            setattr(cls, "_cls_" + name, class_method_impl)
-            instance_method = util.class_method_variant("_cls_" + name)(
-                existing_method
-            )
+            setattr(cls, f"_cls_{name}", class_method_impl)
+            instance_method = util.class_method_variant(f"_cls_{name}")(existing_method)
             setattr(cls, name, instance_method)
 
         return cls

@@ -19,7 +19,7 @@ class TestTestHelperAPIResource(object):
                 self.resource = resource
 
             def do_stuff(self, idempotency_key=None, **params):
-                url = self.instance_url() + "/do_the_thing"
+                url = f"{self.instance_url()}/do_the_thing"
                 headers = util.populate_headers(idempotency_key)
                 self.resource.refresh_from(
                     self.resource.request("post", url, params, headers)

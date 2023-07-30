@@ -23,8 +23,7 @@ class TestCustomerBalanceTransaction(object):
         resource = self.construct_resource()
         assert (
             resource.instance_url()
-            == "/v1/customers/cus_123/balance_transactions/%s"
-            % TEST_RESOURCE_ID
+            == f"/v1/customers/cus_123/balance_transactions/{TEST_RESOURCE_ID}"
         )
 
     def test_is_not_retrievable(self, request_mock):

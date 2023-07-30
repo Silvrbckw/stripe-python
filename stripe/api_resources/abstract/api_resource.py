@@ -25,7 +25,7 @@ class APIResource(StripeObject):
         # Namespaces are separated in object names with periods (.) and in URLs
         # with forward slashes (/), so replace the former with the latter.
         base = cls.OBJECT_NAME.replace(".", "/")
-        return "/v1/%ss" % (base,)
+        return f"/v1/{base}s"
 
     def instance_url(self):
         id = self.get("id")
@@ -41,7 +41,7 @@ class APIResource(StripeObject):
         id = util.utf8(id)
         base = self.class_url()
         extn = quote_plus(id)
-        return "%s/%s" % (base, extn)
+        return f"{base}/{extn}"
 
     # The `method_` and `url_` arguments are suffixed with an underscore to
     # avoid conflicting with actual request parameters in `params`.
@@ -68,11 +68,10 @@ class APIResource(StripeObject):
             params,
         )
 
-        if type(self) is type(obj):
-            self.refresh_from(obj)
-            return self
-        else:
+        if type(self) is not type(obj):
             return obj
+        self.refresh_from(obj)
+        return self
 
     # The `method_` and `url_` arguments are suffixed with an underscore to
     # avoid conflicting with actual request parameters in `params`.

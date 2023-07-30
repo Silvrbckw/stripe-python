@@ -18,8 +18,7 @@ class ResponseTestBase(object):
     def mock_response(self, mock_headers):
         code = 200
         headers = mock_headers
-        response = StripeResponseBase(code, headers)
-        return response
+        return StripeResponseBase(code, headers)
 
     def test_idempotency_key(self, mock_response, mock_headers):
         assert mock_response.idempotency_key == mock_headers["idempotency-key"]
@@ -50,8 +49,7 @@ class TestStripeResponse(ResponseTestBase):
     @pytest.fixture
     def mock_response(self, mock_headers, mock_body):
         code = 200
-        response = StripeResponse(mock_body, code, mock_headers)
-        return response
+        return StripeResponse(mock_body, code, mock_headers)
 
     @pytest.fixture
     def mock_body(self):

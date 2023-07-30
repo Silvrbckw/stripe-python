@@ -15,9 +15,7 @@ class TestCoupon(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Coupon.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/coupons/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/coupons/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Coupon)
 
     def test_is_creatable(self, request_mock):
@@ -34,30 +32,22 @@ class TestCoupon(object):
         resource = stripe.Coupon.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/coupons/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/coupons/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.Coupon.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/coupons/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/coupons/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Coupon)
 
     def test_is_deletable(self, request_mock):
         resource = stripe.Coupon.retrieve(TEST_RESOURCE_ID)
         resource.delete()
-        request_mock.assert_requested(
-            "delete", "/v1/coupons/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("delete", f"/v1/coupons/{TEST_RESOURCE_ID}")
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.Coupon.delete(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "delete", "/v1/coupons/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("delete", f"/v1/coupons/{TEST_RESOURCE_ID}")
         assert resource.deleted is True

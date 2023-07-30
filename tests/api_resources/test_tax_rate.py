@@ -15,9 +15,7 @@ class TestTaxRate(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.TaxRate.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/tax_rates/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/tax_rates/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.TaxRate)
 
     def test_is_creatable(self, request_mock):
@@ -31,15 +29,11 @@ class TestTaxRate(object):
         resource = stripe.TaxRate.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/tax_rates/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/tax_rates/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.TaxRate.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/tax_rates/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/tax_rates/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.TaxRate)

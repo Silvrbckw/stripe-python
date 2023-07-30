@@ -29,7 +29,7 @@ def callback():
     try:
         resp = stripe.OAuth.token(grant_type="authorization_code", code=code)
     except stripe.oauth_error.OAuthError as e:
-        return "Error: " + str(e)
+        return f"Error: {str(e)}"
 
     return """
 <p>Success! Account <code>{stripe_user_id}</code> is connected.</p>
@@ -46,7 +46,7 @@ def deauthorize():
     try:
         stripe.OAuth.deauthorize(stripe_user_id=stripe_user_id)
     except stripe.oauth_error.OAuthError as e:
-        return "Error: " + str(e)
+        return f"Error: {str(e)}"
 
     return """
 <p>Success! Account <code>{stripe_user_id}</code> is disconnected.</p>

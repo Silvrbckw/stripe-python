@@ -16,7 +16,7 @@ class TestApplePayDomain(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.ApplePayDomain.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/apple_pay/domains/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/apple_pay/domains/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.ApplePayDomain)
 
@@ -29,13 +29,13 @@ class TestApplePayDomain(object):
         resource = stripe.ApplePayDomain.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/apple_pay/domains/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/apple_pay/domains/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.ApplePayDomain.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/apple_pay/domains/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/apple_pay/domains/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True

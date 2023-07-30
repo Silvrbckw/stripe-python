@@ -24,7 +24,7 @@ class TaxId(APIResource):
         base = Customer.class_url()
         cust_extn = quote_plus(customer)
         extn = quote_plus(token)
-        return "%s/%s/tax_ids/%s" % (base, cust_extn, extn)
+        return f"{base}/{cust_extn}/tax_ids/{extn}"
 
     @classmethod
     def retrieve(cls, id, api_key=None, **params):

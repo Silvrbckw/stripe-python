@@ -15,9 +15,7 @@ class TestPaymentMethod(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.PaymentMethod.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/payment_methods/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/payment_methods/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.PaymentMethod)
 
     def test_is_creatable(self, request_mock):
@@ -32,7 +30,7 @@ class TestPaymentMethod(object):
         resource.metadata["key"] = "value"
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/payment_methods/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/payment_methods/{TEST_RESOURCE_ID}"
         )
 
     def test_is_modifiable(self, request_mock):
@@ -40,7 +38,7 @@ class TestPaymentMethod(object):
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
         request_mock.assert_requested(
-            "post", "/v1/payment_methods/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/payment_methods/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.PaymentMethod)
 
@@ -48,7 +46,7 @@ class TestPaymentMethod(object):
         resource = stripe.PaymentMethod.retrieve(TEST_RESOURCE_ID)
         resource = resource.attach(customer="cus_123")
         request_mock.assert_requested(
-            "post", "/v1/payment_methods/%s/attach" % TEST_RESOURCE_ID
+            "post", f"/v1/payment_methods/{TEST_RESOURCE_ID}/attach"
         )
         assert isinstance(resource, stripe.PaymentMethod)
 
@@ -58,7 +56,7 @@ class TestPaymentMethod(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/payment_methods/%s/attach" % TEST_RESOURCE_ID,
+            f"/v1/payment_methods/{TEST_RESOURCE_ID}/attach",
             {"customer": "cus_123"},
         )
         assert isinstance(resource, stripe.PaymentMethod)
@@ -67,13 +65,13 @@ class TestPaymentMethod(object):
         resource = stripe.PaymentMethod.retrieve(TEST_RESOURCE_ID)
         resource = resource.detach()
         request_mock.assert_requested(
-            "post", "/v1/payment_methods/%s/detach" % TEST_RESOURCE_ID
+            "post", f"/v1/payment_methods/{TEST_RESOURCE_ID}/detach"
         )
         assert isinstance(resource, stripe.PaymentMethod)
 
     def test_can_detach_classmethod(self, request_mock):
         resource = stripe.PaymentMethod.detach(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/payment_methods/%s/detach" % TEST_RESOURCE_ID
+            "post", f"/v1/payment_methods/{TEST_RESOURCE_ID}/detach"
         )
         assert isinstance(resource, stripe.PaymentMethod)

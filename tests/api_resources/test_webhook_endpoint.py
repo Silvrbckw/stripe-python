@@ -16,7 +16,7 @@ class TestWebhookEndpoint(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.WebhookEndpoint.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/webhook_endpoints/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/webhook_endpoints/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.WebhookEndpoint)
 
@@ -32,7 +32,7 @@ class TestWebhookEndpoint(object):
         resource.enabled_events = ["charge.succeeded"]
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/webhook_endpoints/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/webhook_endpoints/{TEST_RESOURCE_ID}"
         )
 
     def test_is_modifiable(self, request_mock):
@@ -42,7 +42,7 @@ class TestWebhookEndpoint(object):
             url="https://stripe.com",
         )
         request_mock.assert_requested(
-            "post", "/v1/webhook_endpoints/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/webhook_endpoints/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.WebhookEndpoint)
 
@@ -50,13 +50,13 @@ class TestWebhookEndpoint(object):
         resource = stripe.WebhookEndpoint.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/webhook_endpoints/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/webhook_endpoints/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.WebhookEndpoint.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/webhook_endpoints/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/webhook_endpoints/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True

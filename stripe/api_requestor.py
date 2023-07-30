@@ -39,18 +39,16 @@ def _api_encode(data):
             continue
         elif hasattr(value, "stripe_id"):
             yield (key, value.stripe_id)
-        elif isinstance(value, list) or isinstance(value, tuple):
+        elif isinstance(value, (list, tuple)):
             for i, sv in enumerate(value):
                 if isinstance(sv, dict):
                     subdict = _encode_nested_dict("%s[%d]" % (key, i), sv)
-                    for k, v in _api_encode(subdict):
-                        yield (k, v)
+                    yield from _api_encode(subdict)
                 else:
                     yield ("%s[%d]" % (key, i), util.utf8(sv))
         elif isinstance(value, dict):
             subdict = _encode_nested_dict(key, value)
-            for subkey, subvalue in _api_encode(subdict):
-                yield (subkey, subvalue)
+            yield from _api_encode(subdict)
         elif isinstance(value, datetime.datetime):
             yield (key, _encode_datetime(value))
         else:
@@ -61,7 +59,7 @@ def _build_api_url(url, query):
     scheme, netloc, path, base_query, fragment = urlsplit(url)
 
     if base_query:
-        query = "%s&%s" % (base_query, query)
+        query = f"{base_query}&{query}"
 
     return urlunsplit((scheme, netloc, path, query, fragment))
 
@@ -110,9 +108,9 @@ class APIRequestor(object):
     def format_app_info(cls, info):
         str = info["name"]
         if info["version"]:
-            str += "/%s" % (info["version"],)
+            str += f'/{info["version"]}'
         if info["url"]:
-            str += " (%s)" % (info["url"],)
+            str += f' ({info["url"]})'
         return str
 
     def request(self, method, url, params=None, headers=None):
@@ -239,9 +237,9 @@ class APIRequestor(object):
         return None
 
     def request_headers(self, api_key, method):
-        user_agent = "Stripe/v1 PythonBindings/%s" % (version.VERSION,)
+        user_agent = f"Stripe/v1 PythonBindings/{version.VERSION}"
         if stripe.app_info:
-            user_agent += " " + self.format_app_info(stripe.app_info)
+            user_agent += f" {self.format_app_info(stripe.app_info)}"
 
         ua = {
             "bindings_version": version.VERSION,
@@ -265,7 +263,7 @@ class APIRequestor(object):
         headers = {
             "X-Stripe-Client-User-Agent": json.dumps(ua),
             "User-Agent": user_agent,
-            "Authorization": "Bearer %s" % (api_key,),
+            "Authorization": f"Bearer {api_key}",
         }
 
         if self.stripe_account:
@@ -308,7 +306,7 @@ class APIRequestor(object):
                 "questions."
             )
 
-        abs_url = "%s%s" % (self.api_base, url)
+        abs_url = f"{self.api_base}{url}"
 
         encoded_params = urlencode(list(_api_encode(params or {})))
 
@@ -317,7 +315,7 @@ class APIRequestor(object):
         # makes these parameter strings easier to read.
         encoded_params = encoded_params.replace("%5B", "[").replace("%5D", "]")
 
-        if method == "get" or method == "delete":
+        if method in ["get", "delete"]:
             if params:
                 abs_url = _build_api_url(abs_url, encoded_params)
             post_data = None
@@ -332,7 +330,7 @@ class APIRequestor(object):
                 post_data = generator.get_post_data()
                 supplied_headers[
                     "Content-Type"
-                ] = "multipart/form-data; boundary=%s" % (generator.boundary,)
+                ] = f"multipart/form-data; boundary={generator.boundary}"
             else:
                 post_data = encoded_params
         else:
@@ -400,21 +398,16 @@ class APIRequestor(object):
         return resp
 
     def interpret_streaming_response(self, stream, rcode, rheaders):
-        # Streaming response are handled with minimal processing for the success
-        # case (ie. we don't want to read the content). When an error is
-        # received, we need to read from the stream and parse the received JSON,
-        # treating it like a standard JSON response.
-        if self._should_handle_code_as_error(rcode):
-            if hasattr(stream, "getvalue"):
-                json_content = stream.getvalue()
-            elif hasattr(stream, "read"):
-                json_content = stream.read()
-            else:
-                raise NotImplementedError(
-                    "HTTP client %s does not return an IOBase object which "
-                    "can be consumed when streaming a response."
-                )
-
-            return self.interpret_response(json_content, rcode, rheaders)
-        else:
+        if not self._should_handle_code_as_error(rcode):
             return StripeStreamResponse(stream, rcode, rheaders)
+        if hasattr(stream, "getvalue"):
+            json_content = stream.getvalue()
+        elif hasattr(stream, "read"):
+            json_content = stream.read()
+        else:
+            raise NotImplementedError(
+                "HTTP client %s does not return an IOBase object which "
+                "can be consumed when streaming a response."
+            )
+
+        return self.interpret_response(json_content, rcode, rheaders)

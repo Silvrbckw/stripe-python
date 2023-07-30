@@ -16,9 +16,7 @@ class TestTransfer(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Transfer.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/transfers/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/transfers/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Transfer)
 
     def test_is_creatable(self, request_mock):
@@ -32,17 +30,13 @@ class TestTransfer(object):
         resource = stripe.Transfer.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/transfers/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/transfers/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.Transfer.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/transfers/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/transfers/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Transfer)
 
 
@@ -50,7 +44,7 @@ class TestTransferReversals:
     def test_is_listable(self, request_mock):
         resources = stripe.Transfer.list_reversals(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/transfers/%s/reversals" % TEST_RESOURCE_ID
+            "get", f"/v1/transfers/{TEST_RESOURCE_ID}/reversals"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.Reversal)
@@ -60,9 +54,7 @@ class TestTransferReversals:
             TEST_RESOURCE_ID, TEST_REVERSAL_ID
         )
         request_mock.assert_requested(
-            "get",
-            "/v1/transfers/%s/reversals/%s"
-            % (TEST_RESOURCE_ID, TEST_REVERSAL_ID),
+            "get", f"/v1/transfers/{TEST_RESOURCE_ID}/reversals/{TEST_REVERSAL_ID}"
         )
         assert isinstance(resource, stripe.Reversal)
 
@@ -71,7 +63,7 @@ class TestTransferReversals:
             TEST_RESOURCE_ID, amount=100
         )
         request_mock.assert_requested(
-            "post", "/v1/transfers/%s/reversals" % TEST_RESOURCE_ID
+            "post", f"/v1/transfers/{TEST_RESOURCE_ID}/reversals"
         )
         assert isinstance(resource, stripe.Reversal)
 
@@ -81,7 +73,6 @@ class TestTransferReversals:
         )
         request_mock.assert_requested(
             "post",
-            "/v1/transfers/%s/reversals/%s"
-            % (TEST_RESOURCE_ID, TEST_REVERSAL_ID),
+            f"/v1/transfers/{TEST_RESOURCE_ID}/reversals/{TEST_REVERSAL_ID}",
         )
         assert isinstance(resource, stripe.Reversal)

@@ -26,7 +26,7 @@ class ApplicationFeeRefund(UpdateableAPIResource):
         base = ApplicationFee.class_url()
         cust_extn = quote_plus(fee)
         extn = quote_plus(sid)
-        return "%s/%s/refunds/%s" % (base, cust_extn, extn)
+        return f"{base}/{cust_extn}/refunds/{extn}"
 
     @classmethod
     def modify(cls, fee, sid, **params):

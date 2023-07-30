@@ -15,7 +15,5 @@ class TestTaxCode(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.TaxCode.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/tax_codes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/tax_codes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.TaxCode)

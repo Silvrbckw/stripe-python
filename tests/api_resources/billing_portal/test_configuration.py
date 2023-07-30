@@ -30,14 +30,14 @@ class TestConfiguration(object):
             TEST_RESOURCE_ID
         )
         request_mock.assert_requested(
-            "get", "/v1/billing_portal/configurations/%s" % (TEST_RESOURCE_ID)
+            "get", f"/v1/billing_portal/configurations/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.billing_portal.Configuration)
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.billing_portal.Configuration.modify(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/billing_portal/configurations/%s" % (TEST_RESOURCE_ID)
+            "post", f"/v1/billing_portal/configurations/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.billing_portal.Configuration)
 

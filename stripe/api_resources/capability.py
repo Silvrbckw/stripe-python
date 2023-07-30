@@ -23,7 +23,7 @@ class Capability(UpdateableAPIResource):
         base = Account.class_url()
         acct_extn = quote_plus(account)
         extn = quote_plus(token)
-        return "%s/%s/capabilities/%s" % (base, acct_extn, extn)
+        return f"{base}/{acct_extn}/capabilities/{extn}"
 
     @classmethod
     def modify(cls, sid, **params):

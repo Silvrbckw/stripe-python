@@ -29,7 +29,7 @@ class TestVerificationSession(object):
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
         request_mock.assert_requested(
-            "post", "/v1/identity/verification_sessions/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
 
@@ -38,7 +38,7 @@ class TestVerificationSession(object):
             TEST_RESOURCE_ID
         )
         request_mock.assert_requested(
-            "get", "/v1/identity/verification_sessions/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
 
@@ -49,7 +49,7 @@ class TestVerificationSession(object):
         resource.metadata["key"] = "value"
         verification_session = resource.save()
         request_mock.assert_requested(
-            "post", "/v1/identity/verification_sessions/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
         assert resource is verification_session
@@ -60,8 +60,7 @@ class TestVerificationSession(object):
         )
         verification_session = resource.cancel()
         request_mock.assert_requested(
-            "post",
-            "/v1/identity/verification_sessions/%s/cancel" % TEST_RESOURCE_ID,
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}/cancel"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
         assert resource is verification_session
@@ -69,8 +68,7 @@ class TestVerificationSession(object):
     def test_can_cancel_classmethod(self, request_mock):
         resource = stripe.identity.VerificationSession.cancel(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post",
-            "/v1/identity/verification_sessions/%s/cancel" % TEST_RESOURCE_ID,
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}/cancel"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
 
@@ -80,8 +78,7 @@ class TestVerificationSession(object):
         )
         verification_session = resource.redact()
         request_mock.assert_requested(
-            "post",
-            "/v1/identity/verification_sessions/%s/redact" % TEST_RESOURCE_ID,
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}/redact"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)
         assert resource is verification_session
@@ -89,7 +86,6 @@ class TestVerificationSession(object):
     def test_can_redact_classmethod(self, request_mock):
         resource = stripe.identity.VerificationSession.redact(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post",
-            "/v1/identity/verification_sessions/%s/redact" % TEST_RESOURCE_ID,
+            "post", f"/v1/identity/verification_sessions/{TEST_RESOURCE_ID}/redact"
         )
         assert isinstance(resource, stripe.identity.VerificationSession)

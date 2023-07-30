@@ -8,7 +8,7 @@ from stripe.six.moves.urllib.parse import quote_plus
 class UpdateableAPIResource(APIResource):
     @classmethod
     def modify(cls, sid, **params):
-        url = "%s/%s" % (cls.class_url(), quote_plus(util.utf8(sid)))
+        url = f"{cls.class_url()}/{quote_plus(util.utf8(sid))}"
         return cls._static_request("post", url, params=params)
 
     def save(self, idempotency_key=None):
@@ -17,8 +17,7 @@ class UpdateableAPIResource(APIResource):
 
         Use the class method `modify` on the resource instead.
         """
-        updated_params = self.serialize(None)
-        if updated_params:
+        if updated_params := self.serialize(None):
             self._request_and_refresh(
                 "post",
                 self.instance_url(),

@@ -21,7 +21,7 @@ class TestPerson(object):
         resource = self.construct_resource()
         assert (
             resource.instance_url()
-            == "/v1/accounts/acct_123/persons/%s" % TEST_RESOURCE_ID
+            == f"/v1/accounts/acct_123/persons/{TEST_RESOURCE_ID}"
         )
 
     def test_is_not_modifiable(self, request_mock):
@@ -37,5 +37,5 @@ class TestPerson(object):
         resource.first_name = "John"
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/accounts/acct_123/persons/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/accounts/acct_123/persons/{TEST_RESOURCE_ID}"
         )

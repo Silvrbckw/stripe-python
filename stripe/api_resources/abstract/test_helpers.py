@@ -29,7 +29,7 @@ class APIResourceTestHelpers:
         # Namespaces are separated in object names with periods (.) and in URLs
         # with forward slashes (/), so replace the former with the latter.
         base = cls._resource_cls.OBJECT_NAME.replace(".", "/")
-        return "/v1/test_helpers/%ss" % (base,)
+        return f"/v1/test_helpers/{base}s"
 
     def instance_url(self):
         id = self.resource.get("id")
@@ -45,7 +45,7 @@ class APIResourceTestHelpers:
         id = util.utf8(id)
         base = self.class_url()
         extn = quote_plus(id)
-        return "%s/%s" % (base, extn)
+        return f"{base}/{extn}"
 
 
 def test_helpers(cls):

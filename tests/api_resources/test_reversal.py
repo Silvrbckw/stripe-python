@@ -22,7 +22,7 @@ class TestReversal(object):
         resource = self.construct_resource()
         assert (
             resource.instance_url()
-            == "/v1/transfers/tr_123/reversals/%s" % TEST_RESOURCE_ID
+            == f"/v1/transfers/tr_123/reversals/{TEST_RESOURCE_ID}"
         )
 
     def test_is_not_modifiable(self, request_mock):
@@ -38,5 +38,5 @@ class TestReversal(object):
         resource.metadata["key"] = "value"
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/transfers/tr_123/reversals/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/transfers/tr_123/reversals/{TEST_RESOURCE_ID}"
         )

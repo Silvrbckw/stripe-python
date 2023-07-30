@@ -33,7 +33,7 @@ class Reversal(UpdateableAPIResource):
         base = Transfer.class_url()
         cust_extn = quote_plus(transfer)
         extn = quote_plus(token)
-        return "%s/%s/reversals/%s" % (base, cust_extn, extn)
+        return f"{base}/{cust_extn}/reversals/{extn}"
 
     @classmethod
     def modify(cls, sid, **params):

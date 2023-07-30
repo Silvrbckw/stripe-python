@@ -25,14 +25,14 @@ class TestReader(object):
             TEST_RESOURCE_ID, label="new-name"
         )
         request_mock.assert_requested(
-            "post", "/v1/terminal/readers/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/terminal/readers/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Reader)
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.terminal.Reader.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/terminal/readers/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/terminal/readers/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Reader)
 
@@ -41,7 +41,7 @@ class TestReader(object):
         resource.label = "new-name"
         reader = resource.save()
         request_mock.assert_requested(
-            "post", "/v1/terminal/readers/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/terminal/readers/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.terminal.Reader)
         assert resource is reader
@@ -50,14 +50,14 @@ class TestReader(object):
         resource = stripe.terminal.Reader.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/terminal/readers/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/terminal/readers/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.terminal.Reader.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/terminal/readers/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/terminal/readers/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
@@ -67,7 +67,6 @@ class TestReader(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/test_helpers/terminal/readers/%s/present_payment_method"
-            % TEST_RESOURCE_ID,
+            f"/v1/test_helpers/terminal/readers/{TEST_RESOURCE_ID}/present_payment_method",
         )
         assert isinstance(resource, stripe.terminal.Reader)

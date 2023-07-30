@@ -180,11 +180,7 @@ class Quote(CreateableAPIResource, ListableAPIResource, UpdateableAPIResource):
         stripe_account=None,
         **params
     ):
-        url = "%s/%s/%s" % (
-            cls.class_url(),
-            quote_plus(util.utf8(sid)),
-            "pdf",
-        )
+        url = f"{cls.class_url()}/{quote_plus(util.utf8(sid))}/pdf"
         requestor = api_requestor.APIRequestor(
             api_key,
             api_base=stripe.upload_api_base,
@@ -211,5 +207,5 @@ class Quote(CreateableAPIResource, ListableAPIResource, UpdateableAPIResource):
             api_version=version,
             account=stripe_account,
         )
-        url = self.instance_url() + "/pdf"
+        url = f"{self.instance_url()}/pdf"
         return requestor.request_stream("get", url, params=params)

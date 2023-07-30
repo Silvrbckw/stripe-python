@@ -27,9 +27,7 @@ class TestEphemeralKey(object):
             customer="cus_123", stripe_version="2017-05-25"
         )
         resource.delete()
-        request_mock.assert_requested(
-            "delete", "/v1/ephemeral_keys/%s" % resource.id
-        )
+        request_mock.assert_requested("delete", f"/v1/ephemeral_keys/{resource.id}")
         assert isinstance(resource, stripe.EphemeralKey)
 
     def test_can_delete(self, request_mock):

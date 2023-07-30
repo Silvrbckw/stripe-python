@@ -22,6 +22,6 @@ class TestVerificationReport(object):
             TEST_RESOURCE_ID
         )
         request_mock.assert_requested(
-            "get", "/v1/identity/verification_reports/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/identity/verification_reports/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.identity.VerificationReport)

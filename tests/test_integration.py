@@ -65,6 +65,7 @@ class TestIntegration(object):
         self.mock_server_thread.start()
 
     def test_hits_api_base(self):
+
         class MockServerRequestHandler(BaseHTTPRequestHandler):
             num_requests = 0
 
@@ -81,11 +82,12 @@ class TestIntegration(object):
 
         self.setup_mock_server(MockServerRequestHandler)
 
-        stripe.api_base = "http://localhost:%s" % self.mock_server_port
+        stripe.api_base = f"http://localhost:{self.mock_server_port}"
         stripe.Balance.retrieve()
         assert MockServerRequestHandler.num_requests == 1
 
     def test_hits_proxy_through_default_http_client(self):
+
         class MockServerRequestHandler(BaseHTTPRequestHandler):
             num_requests = 0
 
@@ -102,7 +104,7 @@ class TestIntegration(object):
 
         self.setup_mock_server(MockServerRequestHandler)
 
-        stripe.proxy = "http://localhost:%s" % self.mock_server_port
+        stripe.proxy = f"http://localhost:{self.mock_server_port}"
         stripe.Balance.retrieve()
         assert MockServerRequestHandler.num_requests == 1
 
@@ -118,6 +120,7 @@ class TestIntegration(object):
         assert MockServerRequestHandler.num_requests == 2
 
     def test_hits_proxy_through_custom_client(self):
+
         class MockServerRequestHandler(BaseHTTPRequestHandler):
             num_requests = 0
 
@@ -134,15 +137,16 @@ class TestIntegration(object):
 
         self.setup_mock_server(MockServerRequestHandler)
 
-        stripe.default_http_client = (
-            stripe.http_client.new_default_http_client(
-                proxy="http://localhost:%s" % self.mock_server_port
-            )
+        stripe.default_http_client = stripe.http_client.new_default_http_client(
+            proxy=f"http://localhost:{self.mock_server_port}"
         )
         stripe.Balance.retrieve()
         assert MockServerRequestHandler.num_requests == 1
 
     def test_passes_client_telemetry_when_enabled(self):
+
+
+
         class MockServerRequestHandler(BaseHTTPRequestHandler):
             num_requests = 0
 
@@ -161,13 +165,11 @@ class TestIntegration(object):
                             self.headers.get("x-stripe-client-telemetry")
                         )
                         assert "last_request_metrics" in telemetry
-                        req_id = telemetry["last_request_metrics"][
-                            "request_id"
-                        ]
+                        req_id = telemetry["last_request_metrics"]["request_id"]
+                        assert req_id == "req_1"
                         duration_ms = telemetry["last_request_metrics"][
                             "request_duration_ms"
                         ]
-                        assert req_id == "req_1"
                         # The first request took 31 ms, so the client perceived
                         # latency shouldn't be outside this range.
                         assert 30 < duration_ms < 300
@@ -204,8 +206,9 @@ class TestIntegration(object):
                         ).encode("utf-8")
                     )
 
+
         self.setup_mock_server(MockServerRequestHandler)
-        stripe.api_base = "http://localhost:%s" % self.mock_server_port
+        stripe.api_base = f"http://localhost:{self.mock_server_port}"
         stripe.enable_telemetry = True
 
         stripe.Balance.retrieve()
@@ -213,6 +216,7 @@ class TestIntegration(object):
         assert MockServerRequestHandler.num_requests == 2
 
     def test_uses_thread_local_client_telemetry(self):
+
         class MockServerRequestHandler(BaseHTTPRequestHandler):
             num_requests = 0
             seen_metrics = set()
@@ -240,7 +244,7 @@ class TestIntegration(object):
                 self.wfile.write(json.dumps({}).encode("utf-8"))
 
         self.setup_mock_server(MockServerRequestHandler)
-        stripe.api_base = "http://localhost:%s" % self.mock_server_port
+        stripe.api_base = f"http://localhost:{self.mock_server_port}"
         stripe.enable_telemetry = True
         stripe.default_http_client = stripe.http_client.RequestsClient()
 
