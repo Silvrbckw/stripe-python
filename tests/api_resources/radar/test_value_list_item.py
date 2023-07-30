@@ -16,7 +16,7 @@ class TestValueListItem(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.radar.ValueListItem.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/radar/value_list_items/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/radar/value_list_items/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.radar.ValueListItem)
 
@@ -31,13 +31,13 @@ class TestValueListItem(object):
         resource = stripe.radar.ValueListItem.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/radar/value_list_items/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/radar/value_list_items/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.radar.ValueListItem.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/radar/value_list_items/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/radar/value_list_items/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True

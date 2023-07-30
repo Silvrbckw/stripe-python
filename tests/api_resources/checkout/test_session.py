@@ -31,7 +31,7 @@ class TestSession(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.checkout.Session.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/checkout/sessions/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/checkout/sessions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.checkout.Session)
 
@@ -40,7 +40,7 @@ class TestSessionLineItems(object):
     def test_is_listable(self, request_mock):
         resources = stripe.checkout.Session.list_line_items(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/checkout/sessions/%s/line_items" % TEST_RESOURCE_ID
+            "get", f"/v1/checkout/sessions/{TEST_RESOURCE_ID}/line_items"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.LineItem)

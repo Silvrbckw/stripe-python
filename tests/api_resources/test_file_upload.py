@@ -27,7 +27,7 @@ class TestFileUpload(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.FileUpload.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested("get", "/v1/files/%s" % TEST_RESOURCE_ID)
+        request_mock.assert_requested("get", f"/v1/files/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.FileUpload)
 
     def test_is_creatable(self, setup_upload_api_base, request_mock):

@@ -15,9 +15,7 @@ class TestPromotionCode(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.PromotionCode.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/promotion_codes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/promotion_codes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.PromotionCode)
 
     def test_is_creatable(self, request_mock):
@@ -30,7 +28,7 @@ class TestPromotionCode(object):
         resource.metadata["key"] = "value"
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/promotion_codes/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/promotion_codes/{TEST_RESOURCE_ID}"
         )
 
     def test_is_modifiable(self, request_mock):
@@ -38,6 +36,6 @@ class TestPromotionCode(object):
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
         request_mock.assert_requested(
-            "post", "/v1/promotion_codes/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/promotion_codes/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.PromotionCode)

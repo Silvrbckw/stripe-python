@@ -17,8 +17,7 @@ class TestApplicationFeeRefund(object):
         resource.save()
         request_mock.assert_requested(
             "post",
-            "/v1/application_fees/%s/refunds/%s"
-            % (TEST_APPFEE_ID, TEST_RESOURCE_ID),
+            f"/v1/application_fees/{TEST_APPFEE_ID}/refunds/{TEST_RESOURCE_ID}",
         )
 
     def test_is_modifiable(self, request_mock):
@@ -27,8 +26,7 @@ class TestApplicationFeeRefund(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/application_fees/%s/refunds/%s"
-            % (TEST_APPFEE_ID, TEST_RESOURCE_ID),
+            f"/v1/application_fees/{TEST_APPFEE_ID}/refunds/{TEST_RESOURCE_ID}",
         )
         assert isinstance(resource, stripe.ApplicationFeeRefund)
 

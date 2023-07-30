@@ -24,12 +24,12 @@ class StripeMock(object):
             return False
 
         if cls._process is not None:
-            print("stripe-mock already running on port %s" % cls._port)
+            print(f"stripe-mock already running on port {cls._port}")
             return True
 
         cls._port = cls.find_available_port()
 
-        print("Starting stripe-mock on port %s..." % cls._port)
+        print(f"Starting stripe-mock on port {cls._port}...")
 
         cls._process = subprocess.Popen(
             [

@@ -18,8 +18,7 @@ class TestUsageRecord(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/subscription_items/%s/usage_records"
-            % (TEST_SUBSCRIPTION_ITEM_ID),
+            f"/v1/subscription_items/{TEST_SUBSCRIPTION_ITEM_ID}/usage_records",
         )
         assert isinstance(resource, stripe.UsageRecord)
 

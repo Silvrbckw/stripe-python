@@ -31,9 +31,7 @@ class TestCharge(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Charge.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/charges/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/charges/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Charge)
 
     def test_is_creatable(self, request_mock):
@@ -47,32 +45,28 @@ class TestCharge(object):
         resource = stripe.Charge.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/charges/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/charges/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Charge)
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.Charge.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/charges/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/charges/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Charge)
 
     def test_can_capture(self, request_mock):
         charge = stripe.Charge.retrieve(TEST_RESOURCE_ID)
         resource = charge.capture()
         request_mock.assert_requested(
-            "post", "/v1/charges/%s/capture" % TEST_RESOURCE_ID
+            "post", f"/v1/charges/{TEST_RESOURCE_ID}/capture"
         )
         assert isinstance(resource, stripe.Charge)
 
     def test_can_capture_classmethod(self, request_mock):
         resource = stripe.Charge.capture(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/charges/%s/capture" % TEST_RESOURCE_ID
+            "post", f"/v1/charges/{TEST_RESOURCE_ID}/capture"
         )
         assert isinstance(resource, stripe.Charge)
 
@@ -81,7 +75,7 @@ class TestCharge(object):
         resource = charge.mark_as_fraudulent()
         request_mock.assert_requested(
             "post",
-            "/v1/charges/%s" % charge.id,
+            f"/v1/charges/{charge.id}",
             {"fraud_details": {"user_report": "fraudulent"}},
         )
         assert isinstance(resource, stripe.Charge)
@@ -91,7 +85,7 @@ class TestCharge(object):
         resource = charge.mark_as_safe()
         request_mock.assert_requested(
             "post",
-            "/v1/charges/%s" % charge.id,
+            f"/v1/charges/{charge.id}",
             {"fraud_details": {"user_report": "safe"}},
         )
         assert isinstance(resource, stripe.Charge)

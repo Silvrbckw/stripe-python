@@ -16,7 +16,7 @@ class TestSubscriptionScheduleSchedule(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.SubscriptionSchedule.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/subscription_schedules/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)
 
@@ -30,7 +30,7 @@ class TestSubscriptionScheduleSchedule(object):
         resource.metadata["key"] = "value"
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}"
         )
 
     def test_is_modifiable(self, request_mock):
@@ -38,7 +38,7 @@ class TestSubscriptionScheduleSchedule(object):
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)
 
@@ -46,14 +46,14 @@ class TestSubscriptionScheduleSchedule(object):
         resource = stripe.SubscriptionSchedule.retrieve(TEST_RESOURCE_ID)
         resource = resource.cancel()
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s/cancel" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}/cancel"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)
 
     def test_can_cancel_classmethod(self, request_mock):
         resource = stripe.SubscriptionSchedule.cancel(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s/cancel" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}/cancel"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)
 
@@ -61,13 +61,13 @@ class TestSubscriptionScheduleSchedule(object):
         resource = stripe.SubscriptionSchedule.retrieve(TEST_RESOURCE_ID)
         resource = resource.release()
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s/release" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}/release"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)
 
     def test_can_release_classmethod(self, request_mock):
         resource = stripe.SubscriptionSchedule.release(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/subscription_schedules/%s/release" % TEST_RESOURCE_ID
+            "post", f"/v1/subscription_schedules/{TEST_RESOURCE_ID}/release"
         )
         assert isinstance(resource, stripe.SubscriptionSchedule)

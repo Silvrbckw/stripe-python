@@ -15,9 +15,7 @@ class TestCreditNote(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.CreditNote.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/credit_notes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/credit_notes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.CreditNote)
 
     def test_is_creatable(self, request_mock):
@@ -31,17 +29,13 @@ class TestCreditNote(object):
         resource = stripe.CreditNote.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/credit_notes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/credit_notes/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.CreditNote.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/credit_notes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/credit_notes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.CreditNote)
 
     def test_can_preview(self, request_mock):
@@ -53,13 +47,13 @@ class TestCreditNote(object):
         resource = stripe.CreditNote.retrieve(TEST_RESOURCE_ID)
         resource = resource.void_credit_note()
         request_mock.assert_requested(
-            "post", "/v1/credit_notes/%s/void" % TEST_RESOURCE_ID
+            "post", f"/v1/credit_notes/{TEST_RESOURCE_ID}/void"
         )
         assert isinstance(resource, stripe.CreditNote)
 
     def test_can_void_credit_note_classmethod(self, request_mock):
         resource = stripe.CreditNote.void_credit_note(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/credit_notes/%s/void" % TEST_RESOURCE_ID
+            "post", f"/v1/credit_notes/{TEST_RESOURCE_ID}/void"
         )
         assert isinstance(resource, stripe.CreditNote)

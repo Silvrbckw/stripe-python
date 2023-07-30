@@ -23,9 +23,7 @@ class TestQuote(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Quote.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/quotes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/quotes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Quote)
 
     def test_is_creatable(self, request_mock):
@@ -37,68 +35,56 @@ class TestQuote(object):
         resource = stripe.Quote.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.Quote.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Quote)
 
     def test_can_finalize_quote(self, request_mock):
         resource = stripe.Quote.retrieve(TEST_RESOURCE_ID)
         resource = resource.finalize_quote()
         request_mock.assert_requested(
-            "post", "/v1/quotes/%s/finalize" % TEST_RESOURCE_ID
+            "post", f"/v1/quotes/{TEST_RESOURCE_ID}/finalize"
         )
         assert isinstance(resource, stripe.Quote)
 
     def test_can_finalize_quote_classmethod(self, request_mock):
         resource = stripe.Quote.finalize_quote(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/quotes/%s/finalize" % TEST_RESOURCE_ID
+            "post", f"/v1/quotes/{TEST_RESOURCE_ID}/finalize"
         )
         assert isinstance(resource, stripe.Quote)
 
     def test_can_cancel(self, request_mock):
         resource = stripe.Quote.retrieve(TEST_RESOURCE_ID)
         resource = resource.cancel()
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s/cancel" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}/cancel")
         assert isinstance(resource, stripe.Quote)
 
     def test_can_cancel_classmethod(self, request_mock):
         resource = stripe.Quote.cancel(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s/cancel" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}/cancel")
         assert isinstance(resource, stripe.Quote)
 
     def test_can_accept(self, request_mock):
         resource = stripe.Quote.retrieve(TEST_RESOURCE_ID)
         resource = resource.accept()
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s/accept" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}/accept")
         assert isinstance(resource, stripe.Quote)
 
     def test_can_accept_classmethod(self, request_mock):
         resource = stripe.Quote.accept(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "post", "/v1/quotes/%s/accept" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/quotes/{TEST_RESOURCE_ID}/accept")
         assert isinstance(resource, stripe.Quote)
 
     def test_can_list_line_items(self, request_mock):
         resources = stripe.Quote.list_line_items(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/quotes/%s/line_items" % TEST_RESOURCE_ID
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/line_items"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.LineItem)
@@ -106,7 +92,7 @@ class TestQuote(object):
     def test_can_list_line_items_classmethod(self, request_mock):
         resources = stripe.Quote.list_line_items(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/quotes/%s/line_items" % TEST_RESOURCE_ID
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/line_items"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.LineItem)
@@ -116,8 +102,7 @@ class TestQuote(object):
             TEST_RESOURCE_ID
         )
         request_mock.assert_requested(
-            "get",
-            "/v1/quotes/%s/computed_upfront_line_items" % TEST_RESOURCE_ID,
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/computed_upfront_line_items"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.LineItem)
@@ -129,8 +114,7 @@ class TestQuote(object):
             TEST_RESOURCE_ID
         )
         request_mock.assert_requested(
-            "get",
-            "/v1/quotes/%s/computed_upfront_line_items" % TEST_RESOURCE_ID,
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/computed_upfront_line_items"
         )
         assert isinstance(resources.data[0], stripe.LineItem)
 
@@ -139,7 +123,7 @@ class TestQuote(object):
         stream, _ = resource.pdf()
         request_mock.assert_api_base(stripe.upload_api_base)
         request_mock.assert_requested_stream(
-            "get", "/v1/quotes/%s/pdf" % TEST_RESOURCE_ID
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/pdf"
         )
         content = stream.io.read()
         assert content == b"Stripe binary response"
@@ -148,7 +132,7 @@ class TestQuote(object):
         stream = stripe.Quote.pdf(TEST_RESOURCE_ID)
         request_mock.assert_api_base(stripe.upload_api_base)
         request_mock.assert_requested_stream(
-            "get", "/v1/quotes/%s/pdf" % TEST_RESOURCE_ID
+            "get", f"/v1/quotes/{TEST_RESOURCE_ID}/pdf"
         )
         content = stream.io.read()
         assert content == b"Stripe binary response"

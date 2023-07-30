@@ -16,6 +16,6 @@ class TestReportType(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.reporting.ReportType.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/reporting/report_types/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/reporting/report_types/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.reporting.ReportType)

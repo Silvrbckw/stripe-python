@@ -21,7 +21,7 @@ class TestTaxId(object):
         resource = self.construct_resource()
         assert (
             resource.instance_url()
-            == "/v1/customers/cus_123/tax_ids/%s" % TEST_RESOURCE_ID
+            == f"/v1/customers/cus_123/tax_ids/{TEST_RESOURCE_ID}"
         )
 
     def test_is_not_retrievable(self, request_mock):

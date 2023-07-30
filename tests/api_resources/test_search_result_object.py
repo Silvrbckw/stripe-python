@@ -61,7 +61,7 @@ class TestSearchResultObject(object):
         empty = stripe.SearchResultObject.construct_from(
             {"object": "list", "url": "/my/path", "data": []}, "mykey"
         )
-        assert bool(empty) is False
+        assert not bool(empty)
 
     def test_next_search_result_page(self, request_mock):
         sro = stripe.SearchResultObject.construct_from(
@@ -168,15 +168,13 @@ class TestSearchResultObject(object):
 class TestAutoPaging:
     @staticmethod
     def pageable_model_response(ids, has_more, next_page_token):
-        model = {
+        return {
             "object": "search_result",
             "url": "/v1/pageablemodels",
             "data": [{"id": id, "object": "pageablemodel"} for id in ids],
             "has_more": has_more,
             "next_page": next_page_token,
         }
-
-        return model
 
     def test_iter_one_page(self, request_mock):
         sro = stripe.SearchResultObject.construct_from(

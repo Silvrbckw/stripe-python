@@ -18,7 +18,7 @@ class TestSubscriptionItem(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.SubscriptionItem.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/subscription_items/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/subscription_items/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.SubscriptionItem)
 
@@ -35,7 +35,7 @@ class TestSubscriptionItem(object):
         resource.save()
         request_mock.assert_requested(
             "post",
-            "/v1/subscription_items/%s" % TEST_RESOURCE_ID,
+            f"/v1/subscription_items/{TEST_RESOURCE_ID}",
             {"price": "price_123"},
         )
 
@@ -45,7 +45,7 @@ class TestSubscriptionItem(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/subscription_items/%s" % TEST_RESOURCE_ID,
+            f"/v1/subscription_items/{TEST_RESOURCE_ID}",
             {"price": "price_123"},
         )
         assert isinstance(resource, stripe.SubscriptionItem)
@@ -54,14 +54,14 @@ class TestSubscriptionItem(object):
         resource = stripe.SubscriptionItem.retrieve(TEST_RESOURCE_ID)
         resource.delete()
         request_mock.assert_requested(
-            "delete", "/v1/subscription_items/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/subscription_items/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.SubscriptionItem.delete(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "delete", "/v1/subscription_items/%s" % TEST_RESOURCE_ID
+            "delete", f"/v1/subscription_items/{TEST_RESOURCE_ID}"
         )
         assert resource.deleted is True
 
@@ -75,8 +75,7 @@ class TestUsageRecords(object):
             action="increment",
         )
         request_mock.assert_requested(
-            "post",
-            "/v1/subscription_items/%s/usage_records" % TEST_RESOURCE_ID,
+            "post", f"/v1/subscription_items/{TEST_RESOURCE_ID}/usage_records"
         )
         assert isinstance(resource, stripe.UsageRecord)
 
@@ -88,8 +87,7 @@ class TestUsageRecordSummaries(object):
         )
         request_mock.assert_requested(
             "get",
-            "/v1/subscription_items/%s/usage_record_summaries"
-            % TEST_RESOURCE_ID,
+            f"/v1/subscription_items/{TEST_RESOURCE_ID}/usage_record_summaries",
         )
         assert isinstance(resource.data, list)
         assert isinstance(resource.data[0], stripe.UsageRecordSummary)

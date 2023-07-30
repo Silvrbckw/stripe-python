@@ -23,7 +23,7 @@ class TestCapability(object):
         resource = self.construct_resource()
         assert (
             resource.instance_url()
-            == "/v1/accounts/acct_123/capabilities/%s" % TEST_RESOURCE_ID
+            == f"/v1/accounts/acct_123/capabilities/{TEST_RESOURCE_ID}"
         )
 
     def test_is_not_modifiable(self, request_mock):
@@ -39,5 +39,5 @@ class TestCapability(object):
         resource.requested = True
         resource.save()
         request_mock.assert_requested(
-            "post", "/v1/accounts/acct_123/capabilities/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/accounts/acct_123/capabilities/{TEST_RESOURCE_ID}"
         )

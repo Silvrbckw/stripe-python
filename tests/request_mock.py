@@ -179,22 +179,21 @@ class StubRequestHandler(object):
         self._entries[(method, url)] = (rbody, rcode, rheaders, is_streaming)
 
     def get_response(self, method, url, expect_stream=False):
-        if (method, url) in self._entries:
-            rbody, rcode, rheaders, is_streaming = self._entries.pop(
-                (method, url)
+        if (method, url) not in self._entries:
+            return None
+        rbody, rcode, rheaders, is_streaming = self._entries.pop(
+            (method, url)
+        )
+
+        if expect_stream != is_streaming:
+            return None
+
+        if not isinstance(rbody, six.string_types):
+            rbody = json.dumps(rbody)
+        return (
+            StripeStreamResponse(
+                util.io.BytesIO(str.encode(rbody)), rcode, rheaders
             )
-
-            if expect_stream != is_streaming:
-                return None
-
-            if not isinstance(rbody, six.string_types):
-                rbody = json.dumps(rbody)
-            if is_streaming:
-                stripe_response = StripeStreamResponse(
-                    util.io.BytesIO(str.encode(rbody)), rcode, rheaders
-                )
-            else:
-                stripe_response = StripeResponse(rbody, rcode, rheaders)
-            return stripe_response
-
-        return None
+            if is_streaming
+            else StripeResponse(rbody, rcode, rheaders)
+        )

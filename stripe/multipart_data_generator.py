@@ -53,10 +53,10 @@ class MultipartDataGenerator(object):
             self._write(self.line_break)
 
     def param_header(self):
-        return "--%s" % self.boundary
+        return f"--{self.boundary}"
 
     def get_post_data(self):
-        self._write("--%s--" % (self.boundary,))
+        self._write(f"--{self.boundary}--")
         self._write(self.line_break)
         return self.data.getvalue()
 
@@ -74,10 +74,10 @@ class MultipartDataGenerator(object):
 
     def _write_file(self, f):
         while True:
-            file_contents = f.read(self.chunk_size)
-            if not file_contents:
+            if file_contents := f.read(self.chunk_size):
+                self._write(file_contents)
+            else:
                 break
-            self._write(file_contents)
 
     def _initialize_boundary(self):
         return random.randint(0, 2 ** 63)

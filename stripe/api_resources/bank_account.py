@@ -49,7 +49,7 @@ class BankAccount(DeletableAPIResource, UpdateableAPIResource, VerifyMixin):
                 "id",
             )
 
-        return "%s/%s/%s/%s" % (base, owner_extn, class_base, extn)
+        return f"{base}/{owner_extn}/{class_base}/{extn}"
 
     @classmethod
     def modify(cls, sid, **params):
