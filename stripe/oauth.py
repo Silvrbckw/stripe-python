@@ -28,17 +28,12 @@ class OAuth(object):
 
     @staticmethod
     def authorize_url(express=False, **params):
-        if express is False:
-            path = "/oauth/authorize"
-        else:
-            path = "/express/oauth/authorize"
-
+        path = "/oauth/authorize" if express is False else "/express/oauth/authorize"
         OAuth._set_client_id(params)
         if "response_type" not in params:
             params["response_type"] = "code"
         query = urlencode(list(api_requestor._api_encode(params)))
-        url = connect_api_base + path + "?" + query
-        return url
+        return connect_api_base + path + "?" + query
 
     @staticmethod
     def token(api_key=None, **params):

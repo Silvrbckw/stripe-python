@@ -16,6 +16,6 @@ class TestEarlyFraudWarning(object):
     def test_is_retrievable(self, request_mock):
         resource = stripe.radar.EarlyFraudWarning.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/radar/early_fraud_warnings/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/radar/early_fraud_warnings/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.radar.EarlyFraudWarning)

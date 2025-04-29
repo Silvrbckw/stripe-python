@@ -243,11 +243,7 @@ class TestStripeObject(object):
         obj["object"] = u"\u4e00boo\u1f00"
         obj.date = datetime.datetime.fromtimestamp(1511136000)
 
-        res = repr(obj)
-
-        if six.PY2:
-            res = six.text_type(repr(obj), "utf-8")
-
+        res = six.text_type(repr(obj), "utf-8") if six.PY2 else repr(obj)
         assert u"<StripeObject \u4e00boo\u1f00" in res
         assert u"id=foo" in res
         assert u'"date": 1511136000' in res

@@ -32,7 +32,7 @@ def stop_stripe_mock():
 def pytest_configure(config):
     if not config.getoption("--nomock"):
         try:
-            resp = urlopen("http://localhost:%s/" % MOCK_PORT)
+            resp = urlopen(f"http://localhost:{MOCK_PORT}/")
             info = resp.info()
             version = info.get("Stripe-Mock-Version")
             if version != "master" and StrictVersion(version) < StrictVersion(
@@ -82,8 +82,8 @@ def setup_stripe():
         "default_http_client": stripe.default_http_client,
     }
     http_client = stripe.http_client.new_default_http_client()
-    stripe.api_base = "http://localhost:%s" % MOCK_PORT
-    stripe.upload_api_base = "http://localhost:%s" % MOCK_PORT
+    stripe.api_base = f"http://localhost:{MOCK_PORT}"
+    stripe.upload_api_base = f"http://localhost:{MOCK_PORT}"
     stripe.api_key = "sk_test_123"
     stripe.client_id = "ca_123"
     stripe.default_http_client = http_client

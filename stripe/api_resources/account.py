@@ -132,7 +132,7 @@ class Account(
         sid = util.utf8(sid)
         base = cls.class_url()
         extn = quote_plus(sid)
-        return "%s/%s" % (base, extn)
+        return f"{base}/{extn}"
 
     def instance_url(self):
         return self._build_instance_url(self.get("id"))

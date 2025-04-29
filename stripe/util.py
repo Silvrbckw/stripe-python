@@ -119,11 +119,10 @@ else:
         if len(val1) != len(val2):
             return False
         result = 0
-        if six.PY3 and isinstance(val1, bytes) and isinstance(val2, bytes):
-            for x, y in zip(val1, val2):
+        for x, y in zip(val1, val2):
+            if six.PY3 and isinstance(val1, bytes) and isinstance(val2, bytes):
                 result |= x ^ y
-        else:
-            for x, y in zip(val1, val2):
+            else:
                 result |= ord(x) ^ ord(y)
         return result == 0
 
@@ -180,7 +179,7 @@ def convert_to_stripe_object(
         if (
             params is not None
             and hasattr(obj, "object")
-            and ((obj.object == "list") or (obj.object == "search_result"))
+            and obj.object in ["list", "search_result"]
         ):
             obj._retrieve_params = params
 
@@ -237,8 +236,7 @@ def merge_dicts(x, y):
 
 def sanitize_id(id):
     utf8id = utf8(id)
-    quotedId = quote_plus(utf8id)
-    return quotedId
+    return quote_plus(utf8id)
 
 
 class class_method_variant(object):

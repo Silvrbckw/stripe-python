@@ -101,7 +101,7 @@ class TestListObject(object):
         empty = stripe.ListObject.construct_from(
             {"object": "list", "url": "/my/path", "data": []}, "mykey"
         )
-        assert bool(empty) is False
+        assert not bool(empty)
 
     def test_next_page(self, request_mock):
         lo = stripe.ListObject.construct_from(

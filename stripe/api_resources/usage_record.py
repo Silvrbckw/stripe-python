@@ -33,7 +33,7 @@ class UsageRecord(APIResource):
         requestor = api_requestor.APIRequestor(
             api_key, api_version=stripe_version, account=stripe_account
         )
-        url = "/v1/subscription_items/%s/usage_records" % subscription_item
+        url = f"/v1/subscription_items/{subscription_item}/usage_records"
         headers = util.populate_headers(idempotency_key)
         response, api_key = requestor.request("post", url, params, headers)
 

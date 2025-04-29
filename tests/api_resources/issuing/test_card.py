@@ -22,24 +22,18 @@ class TestCard(object):
         resource = stripe.issuing.Card.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/issuing/cards/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/issuing/cards/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.issuing.Card)
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.issuing.Card.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/issuing/cards/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/issuing/cards/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.issuing.Card)
 
     def test_is_saveable(self, request_mock):
         resource = stripe.issuing.Card.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         card = resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/issuing/cards/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/issuing/cards/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.issuing.Card)
         assert resource is card

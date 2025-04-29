@@ -15,9 +15,7 @@ class TestPrice(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Price.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/prices/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/prices/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Price)
 
     def test_is_creatable(self, request_mock):
@@ -34,15 +32,11 @@ class TestPrice(object):
         resource = stripe.Price.retrieve(TEST_RESOURCE_ID)
         resource.metadata["key"] = "value"
         resource.save()
-        request_mock.assert_requested(
-            "post", "/v1/prices/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/prices/{TEST_RESOURCE_ID}")
 
     def test_is_modifiable(self, request_mock):
         resource = stripe.Price.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/prices/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/prices/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Price)

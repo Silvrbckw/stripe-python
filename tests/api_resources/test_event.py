@@ -15,7 +15,5 @@ class TestEvent(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Event.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/events/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/events/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Event)

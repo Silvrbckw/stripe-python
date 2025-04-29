@@ -15,10 +15,10 @@ class StripeClientTestCase(object):
 
     @pytest.fixture
     def request_mocks(self, mocker):
-        request_mocks = {}
-        for lib in self.REQUEST_LIBRARIES:
-            request_mocks[lib] = mocker.patch("stripe.http_client.%s" % (lib,))
-        return request_mocks
+        return {
+            lib: mocker.patch(f"stripe.http_client.{lib}")
+            for lib in self.REQUEST_LIBRARIES
+        }
 
 
 class TestNewDefaultHttpClient(StripeClientTestCase):
@@ -250,7 +250,7 @@ class ClientTestBase(object):
 
     @property
     def valid_url(self, path="/foo"):
-        return "https://api.stripe.com%s" % (path,)
+        return f"https://api.stripe.com{path}"
 
     def make_request(self, method, url, headers, post_data):
         client = self.REQUEST_CLIENT(verify_ssl_certs=True)
@@ -299,7 +299,7 @@ class ClientTestBase(object):
             data = ""
 
             if method != "post":
-                abs_url = "%s?%s" % (abs_url, data)
+                abs_url = f"{abs_url}?{data}"
                 data = None
 
             headers = {"my-header": "header val"}
@@ -321,7 +321,7 @@ class ClientTestBase(object):
             data = ""
 
             if method != "post":
-                abs_url = "%s?%s" % (abs_url, data)
+                abs_url = f"{abs_url}?{data}"
                 data = None
 
             headers = {"my-header": "header val"}
@@ -889,8 +889,8 @@ class TestPycurlClient(StripeClientTestCase, ClientTestBase):
     @pytest.fixture
     def check_call(self, request_mocks):
         def check_call(
-            mock, method, url, post_data, headers, is_streaming=False
-        ):
+                mock, method, url, post_data, headers, is_streaming=False
+            ):
             lib_mock = request_mocks[self.REQUEST_CLIENT.name]
 
             if self.client._proxy:
@@ -902,8 +902,7 @@ class TestPycurlClient(StripeClientTestCase, ClientTestBase):
                     mock.setopt.assert_any_call(lib_mock.PROXYPORT, proxy.port)
                 if proxy.username or proxy.password:
                     mock.setopt.assert_any_call(
-                        lib_mock.PROXYUSERPWD,
-                        "%s:%s" % (proxy.username, proxy.password),
+                        lib_mock.PROXYUSERPWD, f"{proxy.username}:{proxy.password}"
                     )
 
             # A note on methodology here: we don't necessarily need to verify
@@ -972,7 +971,7 @@ class TestAPIEncode(StripeClientTestCase):
     def test_encode_dict(self):
         body = {"foo": {"dob": {"month": 1}, "name": "bat"}}
 
-        values = [t for t in stripe.api_requestor._api_encode(body)]
+        values = list(stripe.api_requestor._api_encode(body))
 
         assert ("foo[dob][month]", 1) in values
         assert ("foo[name]", "bat") in values
@@ -980,7 +979,7 @@ class TestAPIEncode(StripeClientTestCase):
     def test_encode_array(self):
         body = {"foo": [{"dob": {"month": 1}, "name": "bat"}]}
 
-        values = [t for t in stripe.api_requestor._api_encode(body)]
+        values = list(stripe.api_requestor._api_encode(body))
 
         assert ("foo[0][dob][month]", 1) in values
         assert ("foo[0][name]", "bat") in values

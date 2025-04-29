@@ -19,7 +19,7 @@ class TestApplicationFeeRefunds(object):
     def test_is_listable(self, request_mock):
         resources = stripe.ApplicationFee.list_refunds(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/application_fees/%s/refunds" % TEST_RESOURCE_ID
+            "get", f"/v1/application_fees/{TEST_RESOURCE_ID}/refunds"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.ApplicationFeeRefund)
@@ -30,8 +30,7 @@ class TestApplicationFeeRefunds(object):
         )
         request_mock.assert_requested(
             "get",
-            "/v1/application_fees/%s/refunds/%s"
-            % (TEST_RESOURCE_ID, TEST_FEEREFUND_ID),
+            f"/v1/application_fees/{TEST_RESOURCE_ID}/refunds/{TEST_FEEREFUND_ID}",
         )
         assert isinstance(resource, stripe.ApplicationFeeRefund)
 
@@ -40,7 +39,7 @@ class TestApplicationFeeRefunds(object):
             TEST_RESOURCE_ID, amount=100
         )
         request_mock.assert_requested(
-            "post", "/v1/application_fees/%s/refunds" % TEST_RESOURCE_ID
+            "post", f"/v1/application_fees/{TEST_RESOURCE_ID}/refunds"
         )
         assert isinstance(resource, stripe.ApplicationFeeRefund)
 
@@ -50,7 +49,6 @@ class TestApplicationFeeRefunds(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/application_fees/%s/refunds/%s"
-            % (TEST_RESOURCE_ID, TEST_FEEREFUND_ID),
+            f"/v1/application_fees/{TEST_RESOURCE_ID}/refunds/{TEST_FEEREFUND_ID}",
         )
         assert isinstance(resource, stripe.ApplicationFeeRefund)

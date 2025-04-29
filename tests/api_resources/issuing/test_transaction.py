@@ -18,14 +18,14 @@ class TestTransaction(object):
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
         request_mock.assert_requested(
-            "post", "/v1/issuing/transactions/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/issuing/transactions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.issuing.Transaction)
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.issuing.Transaction.retrieve(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/issuing/transactions/%s" % TEST_RESOURCE_ID
+            "get", f"/v1/issuing/transactions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.issuing.Transaction)
 
@@ -34,7 +34,7 @@ class TestTransaction(object):
         resource.metadata["key"] = "value"
         transaction = resource.save()
         request_mock.assert_requested(
-            "post", "/v1/issuing/transactions/%s" % TEST_RESOURCE_ID
+            "post", f"/v1/issuing/transactions/{TEST_RESOURCE_ID}"
         )
         assert isinstance(resource, stripe.issuing.Transaction)
         assert resource is transaction

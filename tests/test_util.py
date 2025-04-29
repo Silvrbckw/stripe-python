@@ -8,7 +8,7 @@ from stripe import util
 from stripe.six import ensure_text
 from stripe.six.moves import builtins
 
-PRINT_FUNC_STRING = builtins.__name__ + ".print"
+PRINT_FUNC_STRING = f"{builtins.__name__}.print"
 
 LogTestCase = namedtuple("LogTestCase", "env flag should_output")
 FmtTestCase = namedtuple("FmtTestCase", "props expected")
@@ -20,34 +20,22 @@ class TestUtil(object):
     def test_test_apikey(self, mocker):
         mocker.patch("stripe.api_key", "sk_test_KOWobxXidxNlIx")
         link = util.dashboard_link(self.DUMMY_REQ_ID)
-        assert (
-            link
-            == "https://dashboard.stripe.com/test/logs/" + self.DUMMY_REQ_ID
-        )
+        assert link == f"https://dashboard.stripe.com/test/logs/{self.DUMMY_REQ_ID}"
 
     def test_live_apikey(self, mocker):
         mocker.patch("stripe.api_key", "sk_live_axwITqZSgTUXSN")
         link = util.dashboard_link(self.DUMMY_REQ_ID)
-        assert (
-            link
-            == "https://dashboard.stripe.com/live/logs/" + self.DUMMY_REQ_ID
-        )
+        assert link == f"https://dashboard.stripe.com/live/logs/{self.DUMMY_REQ_ID}"
 
     def test_no_apikey(self, mocker):
         mocker.patch("stripe.api_key", None)
         link = util.dashboard_link(self.DUMMY_REQ_ID)
-        assert (
-            link
-            == "https://dashboard.stripe.com/test/logs/" + self.DUMMY_REQ_ID
-        )
+        assert link == f"https://dashboard.stripe.com/test/logs/{self.DUMMY_REQ_ID}"
 
     def test_old_apikey(self, mocker):
         mocker.patch("stripe.api_key", "axwITqZSgTUXSN")
         link = util.dashboard_link(self.DUMMY_REQ_ID)
-        assert (
-            link
-            == "https://dashboard.stripe.com/test/logs/" + self.DUMMY_REQ_ID
-        )
+        assert link == f"https://dashboard.stripe.com/test/logs/{self.DUMMY_REQ_ID}"
 
     def log_test_loop(self, test_cases, logging_func, logger_name, mocker):
         for case in test_cases:

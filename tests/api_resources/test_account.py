@@ -18,9 +18,7 @@ class TestAccount(object):
 
     def test_is_retrievable(self, request_mock):
         resource = stripe.Account.retrieve(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "get", "/v1/accounts/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("get", f"/v1/accounts/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Account)
 
     def test_is_creatable(self, request_mock):
@@ -32,9 +30,7 @@ class TestAccount(object):
         account = stripe.Account.retrieve(TEST_RESOURCE_ID)
         account.metadata["key"] = "value"
         resource = account.save()
-        request_mock.assert_requested(
-            "post", "/v1/accounts/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/accounts/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Account)
         assert resource is account
 
@@ -51,14 +47,12 @@ class TestAccount(object):
         account.individual.first_name = "Jane"
 
         request_mock.stub_request(
-            "post",
-            "/v1/accounts/%s" % TEST_RESOURCE_ID,
-            account.to_dict_recursive(),
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}", account.to_dict_recursive()
         )
         resource = account.save()
         request_mock.assert_requested(
             "post",
-            "/v1/accounts/%s" % TEST_RESOURCE_ID,
+            f"/v1/accounts/{TEST_RESOURCE_ID}",
             {"individual": {"first_name": "Jane"}},
         )
         assert isinstance(resource, stripe.Account)
@@ -68,24 +62,18 @@ class TestAccount(object):
         resource = stripe.Account.modify(
             TEST_RESOURCE_ID, metadata={"key": "value"}
         )
-        request_mock.assert_requested(
-            "post", "/v1/accounts/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("post", f"/v1/accounts/{TEST_RESOURCE_ID}")
         assert isinstance(resource, stripe.Account)
 
     def test_is_deletable(self, request_mock):
         resource = stripe.Account.retrieve(TEST_RESOURCE_ID)
         resource.delete()
-        request_mock.assert_requested(
-            "delete", "/v1/accounts/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("delete", f"/v1/accounts/{TEST_RESOURCE_ID}")
         assert resource.deleted is True
 
     def test_can_delete(self, request_mock):
         resource = stripe.Account.delete(TEST_RESOURCE_ID)
-        request_mock.assert_requested(
-            "delete", "/v1/accounts/%s" % TEST_RESOURCE_ID
-        )
+        request_mock.assert_requested("delete", f"/v1/accounts/{TEST_RESOURCE_ID}")
         assert resource.deleted is True
 
     def test_can_retrieve_no_id(self, request_mock):
@@ -97,9 +85,7 @@ class TestAccount(object):
         account = stripe.Account.retrieve(TEST_RESOURCE_ID)
         resource = account.reject(reason="fraud")
         request_mock.assert_requested(
-            "post",
-            "/v1/accounts/%s/reject" % TEST_RESOURCE_ID,
-            {"reason": "fraud"},
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/reject", {"reason": "fraud"}
         )
         assert isinstance(resource, stripe.Account)
         assert resource is account
@@ -107,9 +93,7 @@ class TestAccount(object):
     def test_can_reject_classmethod(self, request_mock):
         resource = stripe.Account.reject(TEST_RESOURCE_ID, reason="fraud")
         request_mock.assert_requested(
-            "post",
-            "/v1/accounts/%s/reject" % TEST_RESOURCE_ID,
-            {"reason": "fraud"},
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/reject", {"reason": "fraud"}
         )
         assert isinstance(resource, stripe.Account)
 
@@ -129,7 +113,7 @@ class TestAccount(object):
         account = stripe.Account.retrieve(TEST_RESOURCE_ID)
         resources = account.persons()
         request_mock.assert_requested(
-            "get", "/v1/accounts/%s/persons" % TEST_RESOURCE_ID
+            "get", f"/v1/accounts/{TEST_RESOURCE_ID}/persons"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.Person)
@@ -139,7 +123,7 @@ class TestAccountCapabilities(object):
     def test_is_listable(self, request_mock):
         resources = stripe.Account.list_capabilities(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/accounts/%s/capabilities" % TEST_RESOURCE_ID
+            "get", f"/v1/accounts/{TEST_RESOURCE_ID}/capabilities"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.Capability)
@@ -150,8 +134,7 @@ class TestAccountCapabilities(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/accounts/%s/capabilities/%s"
-            % (TEST_RESOURCE_ID, TEST_CAPABILITY_ID),
+            f"/v1/accounts/{TEST_RESOURCE_ID}/capabilities/{TEST_CAPABILITY_ID}",
         )
         assert isinstance(resource, stripe.Capability)
 
@@ -161,8 +144,7 @@ class TestAccountCapabilities(object):
         )
         request_mock.assert_requested(
             "get",
-            "/v1/accounts/%s/capabilities/%s"
-            % (TEST_RESOURCE_ID, TEST_CAPABILITY_ID),
+            f"/v1/accounts/{TEST_RESOURCE_ID}/capabilities/{TEST_CAPABILITY_ID}",
         )
         assert isinstance(resource, stripe.Capability)
 
@@ -171,7 +153,7 @@ class TestAccountExternalAccounts(object):
     def test_is_listable(self, request_mock):
         resources = stripe.Account.list_external_accounts(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/accounts/%s/external_accounts" % TEST_RESOURCE_ID
+            "get", f"/v1/accounts/{TEST_RESOURCE_ID}/external_accounts"
         )
         assert isinstance(resources.data, list)
 
@@ -181,8 +163,7 @@ class TestAccountExternalAccounts(object):
         )
         request_mock.assert_requested(
             "get",
-            "/v1/accounts/%s/external_accounts/%s"
-            % (TEST_RESOURCE_ID, TEST_EXTERNALACCOUNT_ID),
+            f"/v1/accounts/{TEST_RESOURCE_ID}/external_accounts/{TEST_EXTERNALACCOUNT_ID}",
         )
         assert isinstance(resource, stripe.BankAccount)
 
@@ -191,7 +172,7 @@ class TestAccountExternalAccounts(object):
             TEST_RESOURCE_ID, external_account="btok_123"
         )
         request_mock.assert_requested(
-            "post", "/v1/accounts/%s/external_accounts" % TEST_RESOURCE_ID
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/external_accounts"
         )
         assert isinstance(resource, stripe.BankAccount)
 
@@ -201,8 +182,7 @@ class TestAccountExternalAccounts(object):
         )
         request_mock.assert_requested(
             "post",
-            "/v1/accounts/%s/external_accounts/%s"
-            % (TEST_RESOURCE_ID, TEST_EXTERNALACCOUNT_ID),
+            f"/v1/accounts/{TEST_RESOURCE_ID}/external_accounts/{TEST_EXTERNALACCOUNT_ID}",
         )
         assert isinstance(resource, stripe.BankAccount)
 
@@ -212,8 +192,7 @@ class TestAccountExternalAccounts(object):
         )
         request_mock.assert_requested(
             "delete",
-            "/v1/accounts/%s/external_accounts/%s"
-            % (TEST_RESOURCE_ID, TEST_EXTERNALACCOUNT_ID),
+            f"/v1/accounts/{TEST_RESOURCE_ID}/external_accounts/{TEST_EXTERNALACCOUNT_ID}",
         )
         assert resource.deleted is True
 
@@ -222,7 +201,7 @@ class TestAccountLoginLinks(object):
     def test_is_creatable(self, request_mock):
         resource = stripe.Account.create_login_link(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "post", "/v1/accounts/%s/login_links" % TEST_RESOURCE_ID
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/login_links"
         )
         assert isinstance(resource, stripe.LoginLink)
 
@@ -233,7 +212,7 @@ class TestAccountPersons(object):
             TEST_RESOURCE_ID, dob={"day": 1, "month": 1, "year": 1980}
         )
         request_mock.assert_requested(
-            "post", "/v1/accounts/%s/persons" % TEST_RESOURCE_ID
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/persons"
         )
         assert isinstance(resource, stripe.Person)
 
@@ -242,15 +221,14 @@ class TestAccountPersons(object):
             TEST_RESOURCE_ID, TEST_PERSON_ID
         )
         request_mock.assert_requested(
-            "delete",
-            "/v1/accounts/%s/persons/%s" % (TEST_RESOURCE_ID, TEST_PERSON_ID),
+            "delete", f"/v1/accounts/{TEST_RESOURCE_ID}/persons/{TEST_PERSON_ID}"
         )
         assert resource.deleted is True
 
     def test_is_listable(self, request_mock):
         resources = stripe.Account.list_persons(TEST_RESOURCE_ID)
         request_mock.assert_requested(
-            "get", "/v1/accounts/%s/persons" % TEST_RESOURCE_ID
+            "get", f"/v1/accounts/{TEST_RESOURCE_ID}/persons"
         )
         assert isinstance(resources.data, list)
         assert isinstance(resources.data[0], stripe.Person)
@@ -260,8 +238,7 @@ class TestAccountPersons(object):
             TEST_RESOURCE_ID, TEST_PERSON_ID, metadata={"foo": "bar"}
         )
         request_mock.assert_requested(
-            "post",
-            "/v1/accounts/%s/persons/%s" % (TEST_RESOURCE_ID, TEST_PERSON_ID),
+            "post", f"/v1/accounts/{TEST_RESOURCE_ID}/persons/{TEST_PERSON_ID}"
         )
         assert isinstance(resource, stripe.Person)
 
@@ -270,7 +247,6 @@ class TestAccountPersons(object):
             TEST_RESOURCE_ID, TEST_PERSON_ID
         )
         request_mock.assert_requested(
-            "get",
-            "/v1/accounts/%s/persons/%s" % (TEST_RESOURCE_ID, TEST_PERSON_ID),
+            "get", f"/v1/accounts/{TEST_RESOURCE_ID}/persons/{TEST_PERSON_ID}"
         )
         assert isinstance(resource, stripe.Person)

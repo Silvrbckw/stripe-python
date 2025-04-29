@@ -69,15 +69,7 @@ class APIHeaderMatcher(object):
         )
 
     def __repr__(self):
-        return "APIHeaderMatcher(request_method=%s, api_key=%s, extra=%s, " "user_agent=%s, app_info=%s, idempotency_key=%s, fail_platform_call=%s)" % (
-            repr(self.request_method),
-            repr(self.api_key),
-            repr(self.extra),
-            repr(self.user_agent),
-            repr(self.app_info),
-            repr(self.idempotency_key),
-            repr(self.fail_platform_call),
-        )
+        return f"APIHeaderMatcher(request_method={repr(self.request_method)}, api_key={repr(self.api_key)}, extra={repr(self.extra)}, user_agent={repr(self.user_agent)}, app_info={repr(self.app_info)}, idempotency_key={repr(self.idempotency_key)}, fail_platform_call={repr(self.fail_platform_call)})"
 
     def _keys_match(self, other):
         expected_keys = list(set(self.EXP_KEYS + list(self.extra.keys())))
@@ -89,7 +81,7 @@ class APIHeaderMatcher(object):
         return sorted(other.keys()) == sorted(expected_keys)
 
     def _auth_match(self, other):
-        return other["Authorization"] == "Bearer %s" % (self.api_key,)
+        return other["Authorization"] == f"Bearer {self.api_key}"
 
     def _user_agent_match(self, other):
         if self.user_agent is not None:
@@ -105,10 +97,7 @@ class APIHeaderMatcher(object):
     def _x_stripe_ua_contains_app_info(self, other):
         if self.app_info:
             ua = json.loads(other["X-Stripe-Client-User-Agent"])
-            if "application" not in ua:
-                return False
-            return ua["application"] == self.app_info
-
+            return False if "application" not in ua else ua["application"] == self.app_info
         return True
 
     def _x_stripe_ua_handles_failed_platform_function(self, other):
@@ -118,11 +107,7 @@ class APIHeaderMatcher(object):
         return True
 
     def _extra_match(self, other):
-        for k, v in six.iteritems(self.extra):
-            if other[k] != v:
-                return False
-
-        return True
+        return all(other[k] == v for k, v in six.iteritems(self.extra))
 
 
 class QueryMatcher(object):
@@ -136,7 +121,7 @@ class QueryMatcher(object):
         return self.expected == sorted(parsed)
 
     def __repr__(self):
-        return "QueryMatcher(expected=%s)" % (repr(self.expected))
+        return f"QueryMatcher(expected={repr(self.expected)})"
 
 
 class UrlMatcher(object):
@@ -150,16 +135,14 @@ class UrlMatcher(object):
             expected = getattr(self.exp_parts, part)
             actual = getattr(other_parts, part)
             if expected != actual:
-                print(
-                    'Expected %s "%s" but got "%s"' % (part, expected, actual)
-                )
+                print(f'Expected {part} "{expected}" but got "{actual}"')
                 return False
 
         q_matcher = QueryMatcher(stripe.util.parse_qsl(self.exp_parts.query))
         return q_matcher == other
 
     def __repr__(self):
-        return "UrlMatcher(exp_parts=%s)" % (repr(self.exp_parts))
+        return f"UrlMatcher(exp_parts={repr(self.exp_parts)})"
 
 
 class AnyUUID4Matcher(object):
@@ -238,8 +221,7 @@ class TestAPIRequestor(object):
 
     @pytest.fixture
     def requestor(self, http_client):
-        requestor = stripe.api_requestor.APIRequestor(client=http_client)
-        return requestor
+        return stripe.api_requestor.APIRequestor(client=http_client)
 
     @pytest.fixture
     def mock_response(self, mocker, http_client):
@@ -262,14 +244,14 @@ class TestAPIRequestor(object):
     @pytest.fixture
     def check_call(self, http_client):
         def check_call(
-            method,
-            abs_url=None,
-            headers=None,
-            post_data=None,
-            is_streaming=False,
-        ):
+                method,
+                abs_url=None,
+                headers=None,
+                post_data=None,
+                is_streaming=False,
+            ):
             if not abs_url:
-                abs_url = "%s%s" % (stripe.api_base, self.valid_path)
+                abs_url = f"{stripe.api_base}{self.valid_path}"
             if not headers:
                 headers = APIHeaderMatcher(request_method=method)
 
@@ -289,7 +271,7 @@ class TestAPIRequestor(object):
         return "/foo"
 
     def encoder_check(self, key):
-        stk_key = "my%s" % (key,)
+        stk_key = f"my{key}"
 
         value = self.ENCODE_INPUTS[key]
         expectation = [
@@ -297,7 +279,7 @@ class TestAPIRequestor(object):
         ]
 
         stk = []
-        fn = getattr(stripe.api_requestor.APIRequestor, "encode_%s" % (key,))
+        fn = getattr(stripe.api_requestor.APIRequestor, f"encode_{key}")
         fn(stk, stk_key, value)
 
         if isinstance(value, dict):
@@ -358,19 +340,15 @@ class TestAPIRequestor(object):
 
     def test_url_construction(self, requestor, mock_response, check_call):
         CASES = (
-            ("%s?foo=bar" % stripe.api_base, "", {"foo": "bar"}),
-            ("%s?foo=bar" % stripe.api_base, "?", {"foo": "bar"}),
+            (f"{stripe.api_base}?foo=bar", "", {"foo": "bar"}),
+            (f"{stripe.api_base}?foo=bar", "?", {"foo": "bar"}),
             (stripe.api_base, "", {}),
             (
                 "%s/%%20spaced?foo=bar%%24&baz=5" % stripe.api_base,
                 "/%20spaced?foo=bar%24",
                 {"baz": "5"},
             ),
-            (
-                "%s?foo=bar&foo=bar" % stripe.api_base,
-                "?foo=bar",
-                {"foo": "bar"},
-            ),
+            (f"{stripe.api_base}?foo=bar&foo=bar", "?foo=bar", {"foo": "bar"}),
         )
 
         for expected, url, params in CASES:
@@ -386,11 +364,7 @@ class TestAPIRequestor(object):
 
             resp, key = requestor.request(meth, self.valid_path, {})
 
-            if meth == "post":
-                post_data = ""
-            else:
-                post_data = None
-
+            post_data = "" if meth == "post" else None
             check_call(meth, post_data=post_data)
             assert isinstance(resp, StripeResponse)
 
@@ -409,11 +383,7 @@ class TestAPIRequestor(object):
                 {},
             )
 
-            if meth == "post":
-                post_data = ""
-            else:
-                post_data = None
-
+            post_data = "" if meth == "post" else None
             check_call(meth, post_data=post_data, is_streaming=True)
             assert isinstance(resp, StripeStreamResponse)
 
@@ -422,6 +392,11 @@ class TestAPIRequestor(object):
     def test_methods_with_params_and_response(
         self, requestor, mock_response, check_call
     ):
+        encoded = (
+            "adict[frobble]=bits&adatetime=1356994800&"
+            "alist[0]=1&alist[1]=2&alist[2]=3"
+        )
+
         for method in VALID_API_METHODS:
             mock_response('{"foo": "bar", "baz": 6}', 200)
 
@@ -430,11 +405,6 @@ class TestAPIRequestor(object):
                 "adict": {"frobble": "bits"},
                 "adatetime": datetime.datetime(2013, 1, 1, tzinfo=GMT1()),
             }
-            encoded = (
-                "adict[frobble]=bits&adatetime=1356994800&"
-                "alist[0]=1&alist[1]=2&alist[2]=3"
-            )
-
             resp, key = requestor.request(method, self.valid_path, params)
             assert isinstance(resp, StripeResponse)
 
@@ -447,16 +417,17 @@ class TestAPIRequestor(object):
                     post_data=QueryMatcher(stripe.util.parse_qsl(encoded)),
                 )
             else:
-                abs_url = "%s%s?%s" % (
-                    stripe.api_base,
-                    self.valid_path,
-                    encoded,
-                )
+                abs_url = f"{stripe.api_base}{self.valid_path}?{encoded}"
                 check_call(method, abs_url=UrlMatcher(abs_url))
 
     def test_methods_with_params_and_streaming_response(
         self, requestor, mock_streaming_response, check_call
     ):
+        encoded = (
+            "adict[frobble]=bits&adatetime=1356994800&"
+            "alist[0]=1&alist[1]=2&alist[2]=3"
+        )
+
         for method in VALID_API_METHODS:
             mock_streaming_response(
                 util.io.BytesIO(b'{"foo": "bar", "baz": 6}'), 200
@@ -467,11 +438,6 @@ class TestAPIRequestor(object):
                 "adict": {"frobble": "bits"},
                 "adatetime": datetime.datetime(2013, 1, 1, tzinfo=GMT1()),
             }
-            encoded = (
-                "adict[frobble]=bits&adatetime=1356994800&"
-                "alist[0]=1&alist[1]=2&alist[2]=3"
-            )
-
             resp, key = requestor.request_stream(
                 method,
                 self.valid_path,
@@ -488,11 +454,7 @@ class TestAPIRequestor(object):
                     is_streaming=True,
                 )
             else:
-                abs_url = "%s%s?%s" % (
-                    stripe.api_base,
-                    self.valid_path,
-                    encoded,
-                )
+                abs_url = f"{stripe.api_base}{self.valid_path}?{encoded}"
                 check_call(
                     method, abs_url=UrlMatcher(abs_url), is_streaming=True
                 )
@@ -583,7 +545,7 @@ class TestAPIRequestor(object):
             mock_response("{}", 200)
             requestor.request("get", self.valid_path, {})
 
-            ua = "Stripe/v1 PythonBindings/%s" % (stripe.version.VERSION,)
+            ua = f"Stripe/v1 PythonBindings/{stripe.version.VERSION}"
             ua += " MyAwesomePlugin/1.2.34 (https://myawesomeplugin.info)"
             header_matcher = APIHeaderMatcher(
                 user_agent=ua,
